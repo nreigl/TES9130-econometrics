@@ -23,7 +23,7 @@ package "checkpoint" and package "ProjectTemplage" are optional and have to be o
 Comments style in the R files is: 
 
    * #: Main comment above some function or file header
-   * ##: Note/ explanation comment: either at the right side of a function or below a function
-   * ### Question/ To do: improve the function or find a solution for a given problem
+   * ##: Note/ explanation comment - either at the right side of a function or below a function
+   * ### Question/ To do: improve the function or find a solution for a given problem - either at the right side of a function or below a function
 
 > ## Docendo discimus
