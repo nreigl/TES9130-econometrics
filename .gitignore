@@ -1,3 +1,6 @@
 .Rproj.user
 .Rhistory
 .RData
+gapminder-ggplot2-*.html
+gapminder-ggplot2-*.Rmd
+README.html
