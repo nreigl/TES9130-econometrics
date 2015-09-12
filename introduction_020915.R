@@ -27,10 +27,7 @@ Cars<-read_dta("DatasetCars.dta")
 summary(Cars)
 View(Cars)
 
-
-
 # Find the mean weight of cars E(y)
-
 mean(Cars$weight)
 length(Cars$rep78)
 
@@ -60,6 +57,7 @@ ci.gm<-function(x){
   return (vec)
 }
 ci.gm(Cars.f$weight)
+### not exact solution. To do: improve function
 
 # Find the harmonic mean of cars.f E(y)
 harmonic.mean(Cars.f$weight)
@@ -68,6 +66,7 @@ harmonic.mean(Cars.f$weight)
 Cars.f$rep78 <- as.character(Cars.f$rep78)
 names(Cars.f$rep78)
 ## the names function gives me a Null vector. Possible solutions:
+
 # convert character to factor
 Cars.f$rep78fac<-as.factor(Cars.f$rep78)
 levels(Cars.f$rep78fac)
@@ -84,13 +83,13 @@ Cars.f %>%
    group_by(rep78) %>% 
   summarise(length(rep78),
             avg = mean(weight),
-            local.avg = (avg*length(rep78)/(69)), # dirty solution (N=69 as can be seen by the previous function): surprisingly I did not find a way to ungroup and then sum up the length of the vector. Defining N, even though the result is saved, does not work: output for local avg is <dbl[1]>
+            local.avg = (avg*length(rep78)/(69)), ## dirty solution (N=69 as can be seen by the previous function): surprisingly I did not find a way to ungroup and then sum up the length of the vector. Defining N, even though the result is saved, does not work: output for local avg is <dbl[1]>
             weight.max = max(weight),
             weight.min = min(weight))
+### Question: How can I write a clean local.avg function without having to set N=69 manually?
 
 
 
-# 
 # Calculate mean of weights, sd, min. weight, max. weight and number of observations per quality class for domestic cars
 Cars.f %>%
   filter(foreign==0) %>% 
@@ -103,7 +102,7 @@ Cars.f %>%
 
 # Prove that E(E(weight| rep78, foreign) | rep78)=E(weight | rep78)
 E1<-as.data.frame((Cars$foreign)^2*Cars$weight)
-colnames(E1) <- letters[ncol(E1)] # define colname dynamically
+colnames(E1) <- letters[ncol(E1)] ## define colname dynamically
 
 E1 %>% 
   summarise(length(a),
@@ -118,23 +117,17 @@ Cars$foreign.fac<-as.factor(Cars$foreign)
 levels(Cars$foreign.fac)
 
 
-test<-as.data.frame(Cars$foreign)
-
-
-N2<-Cars %>% 
-  summarise(length(rep78))
-N2
-
-
 Cars%>%
   group_by(foreign)%>% 
   summarise(length(rep78),
             avg = mean(weight),
-            local.avg2 = (foreign)^2*(avg*length(rep78)/(74)),
+            local.avg2 = (foreign)^2*(avg*length(rep78)/(74)), ## function not working properly 
             sd(weight),
             weight.max = max(weight),
             weight.min = min(weight))  
-
+### Question: how can after the grouping process (group_by), inside the summarise pipe an ungroup be executed? The local avg2 function is missing the total number of observations as this number can only be extracted from the ungrouped dataset. 
+## I know of course that there are at least 5 other ways (aka the "good old fashioned ways") to find the local average without using dplyr and magrittr operations.
+## However, there has to be a way to achieve the desired goal also in the efficient dplyr framework. Ideas welcome!!
 
 
 session_info()
