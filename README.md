@@ -1,12 +1,12 @@
 TES9130-econometrics
 ================
 
-## Private R code for the TES9130- econometrics course.
+## Private R code for the TES9130- econometrics course
 
 The aim of this repository is to provide R code translated from the course's STATA code for training and reproducability purposes. I extend certain functions when I see it fit, mainly for visualization and explantory reasons.  
 I cannot accept any guarantee of completeness, correctness or accuracy. 
 
-Participation is encouraged! :  
+Participation is encouraged!!!  
 -   [This blog post](http://kbroman.org/github_tutorial/pages/fork.html) from Karl Broman provides a nice short introduction how to contribute to a repository
 -   Please try to follow some coding style conventions. The [Google Styleguide](https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml) provides some best practise examples
 
