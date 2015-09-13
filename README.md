@@ -6,7 +6,7 @@ TES9130-econometrics
 The aim of this repository is to provide R code translated from the course's STATA code for training and reproducibility purposes. I extend certain functions when I see it fit, mainly for visualization and explanatory reasons.  
 I cannot accept any guarantee of completeness, correctness or accuracy. 
 
-Participation is encouraged!!!  
+Participation is encouraged!!! The open questions and to do's are cleary marked in the individual files. 
 -   [This blog post](http://kbroman.org/github_tutorial/pages/fork.html) from Karl Broman provides a nice short introduction how to contribute to a repository
 -   Please try to follow some coding style conventions. The [Google Styleguide](https://google-styleguide.googlecode.com/svn/trunk/Rguide.xml) provides some best practice examples
 
