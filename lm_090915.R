@@ -82,3 +82,7 @@ sd(Cars$weight)
 
 
 # Calculate the Mean Square Error e(rmse)=e'e/N-K
+
+
+
+sessionInfo()
