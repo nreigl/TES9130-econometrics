@@ -21,7 +21,7 @@ setwd("~/studium/TUT/econometric (phd) - TES9130/R/econometrics - TES9130")
 # write.csv(Cars, file = "Cars.csv")
 Cars <- read.csv("~/studium/TUT/econometric (phd) - TES9130/R/econometrics - TES9130/Cars.csv")
 
-# discriptive
+# discriptive statistics
 summary(Cars)
 str(Cars)
 
