@@ -19,7 +19,7 @@ setwd("~/studium/TUT/econometric (phd) - TES9130/R/econometrics - TES9130")
 # Cars<-read_dta("auto.dta")
 # Cars<-as.data.frame(Cars)
 # write.csv(Cars, file = "Cars.csv")
-Cars <- read.csv("~/studium/TUT/econometric (phd) - TES9130/R/econometrics - TES9130/Cars.csv")
+Cars <- read.csv("~/studium/TUT/econometric (phd) - TES9130/R/econometrics - TES9130/econometrics-TES9130/Cars.csv")
 
 # discriptive statistics
 summary(Cars)
@@ -69,7 +69,7 @@ manualOLS<-as.data.frame(manualOLS)
 library(broom)
 lm.fit.tidy<-tidy(lm.fit)
 
-## check for is equal true
+## check for:  is equal true
 manualOLS & lm.fit.tidy$estimate
 
 
