@@ -120,6 +120,18 @@ yhatnormal
 
 # 2) Duan(1983) approach: apply a weaker assumption of iid error term and estimate E(exp(u))=avg(exp(u_hat)), then E(y|x)=exp(x'b)avg(exp(u_hat))
 # predict residuals u_ha
+e<-(lm1$residuals)
+summary(e)
+Duan <- (exp(lm1$residuals))
+summary(Duan)                 ### Same results as in STATA
+
+yhat_Duan<- (exp(lnyhat)*mean(lnyhat))
+summary(yhat_Duan)            ### Not same results as in STATA
+
+### For comparison generate the wrong prediction in levels using exp(E(ln y)), generate the WAGE in levels and compare with the results above
+yhat_wrong<- exp(lnyhat)  
+summary(yhat_wrong)           ### Same results as in STATA
+
 
 ############################################
 # Last commit ##############################
