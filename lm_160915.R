@@ -123,14 +123,14 @@ yhatnormal
 e<-(lm1$residuals)
 summary(e)
 Duan <- (exp(lm1$residuals))
-summary(Duan)                 ### Same results as in STATA
+summary(Duan)                 ## Same results as in STATA
 
 yhat_Duan<- (exp(lnyhat)*mean(lnyhat))
-summary(yhat_Duan)            ### Not same results as in STATA
+summary(yhat_Duan)            ## Not same results as in STATA
 
 ### For comparison generate the wrong prediction in levels using exp(E(ln y)), generate the WAGE in levels and compare with the results above
 yhat_wrong<- exp(lnyhat)  
-summary(yhat_wrong)           ### Same results as in STATA
+summary(yhat_wrong)           ## Same results as in STATA
 summary(WAGE_lev)
 summary(yhatnormal)
 summary(yhat_Duan)
@@ -141,7 +141,7 @@ summary(yhat_wrong)
 MINORITY<-ifelse(Males$BLACK==1 | Males$HISP==1, 1,0)
 summary(MINORITY)
 MINSCH<-Males$SCHOOL*MINORITY
-summary(MINSCH)          ### Same results like in STATA
+summary(MINSCH)          ## Same results like in STATA
 
 ############################################
 # Last commit ##############################
