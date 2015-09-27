@@ -31,7 +31,8 @@ pairs(Males)
 # Histogram 
 discrete.histogram(Males$SCHOOL)
 hist(Males$SCHOOL)
-
+hist(Males$SCHOOL, freq = F)
+lines(density(Males$SCHOOL), col = 4)
 
 # Exp Wage
 Wage<-Males$WAGE
@@ -39,6 +40,7 @@ Males$ExpWage<- exp(Wage)
 
 hist(Males$WAGE)
 hist(Males$ExpWage)
+
 
 ## or via ggplot2
 # Hist. Wage
@@ -152,13 +154,87 @@ summary(MINSCH)          ## Same results like in STATA
 ##  xi: gives me interaction term and the respective dummyies
 ## regress WAGE EXPER UNION MAR i.MINORITY*SCHOOL 
 
+## additive interaction
 names(Males)
-lm2<- lm(WAGE ~ EXPER + UNION + MAR + BLACK, data=Males) 
+lm2<- lm(WAGE ~ EXPER + UNION + MAR + MINORITY * SCHOOL ,  data=Males) 
 summary(lm2)
+confint.lm(lm2)
+
+## Same results like in STATA
+
+# Generate interaction manually
+## lm3<- lm(WAGE ~ EXPER + UNION + MAR + MINSCH ,  data=Males) # cannot work as term a:x is an interaction term in the lm function, which gives the difference in slopes
+## compared with the reference category
+### Not sure how to generate the interaction manually
+
+library(car) ## for the ANOVA function
+plot(lm2)                    ## show the diagnostics on the screen
+Anova(lm2) 
+Anova(lm1,lm2)
+
+library(effects)
+eff_cf <- effect("MINORITY:SCHOOL", lm2)
+eff_cf
+print(plot(eff_cf, multiline=TRUE))
+# All effects
+eff.pres <- allEffects(lm2, xlevels=50)
+plot(eff.pres)
+
+# Calculate average marginal effect by hand
+cf1 <- summary(lm2)$coef
+me_SCHOOL <- cf1['SCHOOL',1] + cf1['MINORITY:SCHOOL',1]*MINORITY # MEs of SCHOOL given MINORITY
+me_MINORITY <- cf1['MINORITY',1] + cf1['MINORITY:SCHOOL',1]*Males$SCHOOL # MEs of MINORITY given SCHOOL
+mean(me_SCHOOL) # average marginal effects of SCHOOL
+mean(me_MINORITY) # average marginal effects of MINORITY
+
+# Variance-Covariance Matrix for a Fitted Model
+v <- vcov(lm2)
+v
+## same as in STATA
+
+# standard error for interaction
+sqrt(v['SCHOOL','SCHOOL'] + (mean(MINORITY)^2)*v['MINORITY:SCHOOL','MINORITY:SCHOOL'] + 2*mean(MINORITY)*v['SCHOOL','MINORITY:SCHOOL']) 
+
+# STATA lincom procedure
+## Lincomp procedure not modelled so far. "multcomp" might help. Gelman has in "Data Analysis Using Regression and Multilevel/Hierarchical Models" similar exercises
+
+# V TEST FOR MODEL (MIS)SPECIFICATION
+# RAMSEY (1969) RESET TEST (CONTROLLING FUNCTIONAL FORM AND OMITTED VARIABLES)
+### to do
+
+
+# Obtain AIC and BIC
+lm3<-lm(WAGE ~ SCHOOL + EXPER + EXPER2 + UNION + MAR + BLACK ,  data=Males)
+summary(lm3)
+AIC(lm3)
+stopifnot(all.equal(AIC(lm3),
+                    AIC(logLik(lm3))))
+BIC(lm3)
+
+lm4 <- update(lm3, . ~ . -EXPER2)
+summary(lm4)
+AIC(lm3, lm4)
+BIC(lm3, lm4)
+## marginal difference to STATA. Results lead to the same conclusion
+
+
+# Test Joint hypotheses with F-test
+### To do  
+
+# Test restricted and unrestricted model with F-test
+### To do
+
+# VI MULTICOLLINEARITY 
+  
+# Since variable Experience is defined: EXPER=AGE-6, then generate variable AGE=EXPER+6
+
+
+# Note that regressing both AGE and EXPER on logwage leads to exact multicollinearity and AGE is dropped
+
+# Calculate Variance Inflation Factors (alternatively Tolerance=1/VIF) for explanatory variables. Note that VIF above 10 or Tolerance below 0.1 are signs of warning.
 
 
 ############################################
 # Last commit ##############################
 ############################################
-
 
