@@ -174,7 +174,6 @@ R2<-cor(yhat,Cars$price)^2
 R2
 
 # Calculation of confidence intervals
-
 lm.fit <- lm(price ~ mpg + weight, data=Cars)
 confint(lm.fit)
 confint(lm.fit, "wt")
