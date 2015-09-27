@@ -120,6 +120,10 @@ yhatnormal
 
 # 2) Duan(1983) approach: apply a weaker assumption of iid error term and estimate E(exp(u))=avg(exp(u_hat)), then E(y|x)=exp(x'b)avg(exp(u_hat))
 # predict residuals u_ha
+lnyhat = predict(lm1, data.frame(Males)) ## update as the code line was missing
+lnyhat
+summary(lnyhat)
+
 e<-(lm1$residuals)
 summary(e)
 Duan <- (exp(lm1$residuals))
@@ -143,6 +147,18 @@ summary(MINORITY)
 MINSCH<-Males$SCHOOL*MINORITY
 summary(MINSCH)          ## Same results like in STATA
 
+# Generate regression with interaction MINORITY*SCHOOL
+
+##  xi: gives me interaction term and the respective dummyies
+## regress WAGE EXPER UNION MAR i.MINORITY*SCHOOL 
+
+names(Males)
+lm2<- lm(WAGE ~ EXPER + UNION + MAR + BLACK, data=Males) 
+summary(lm2)
+
+
 ############################################
 # Last commit ##############################
 ############################################
+
+
