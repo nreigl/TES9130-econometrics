@@ -166,6 +166,15 @@ confint.lm(lm2)
 ## lm3<- lm(WAGE ~ EXPER + UNION + MAR + MINSCH ,  data=Males) # cannot work as term a:x is an interaction term in the lm function, which gives the difference in slopes
 ## compared with the reference category
 ### Not sure how to generate the interaction manually
+lm3 <- lm(WAGE ~ EXPER + UNION + MAR + MINORITY*(SCHOOL), data=Males)
+summary(lm3)
+lm3$coef
+confint.lm(lm3)
+### Another way to generate the interaction but the output from lm3 and lm3a is different. WHY?
+lm3a <- lm(WAGE ~ EXPER + UNION + MAR + SCHOOL:MINORITY, data=Males)
+summary(lm3a)
+lm3a$coef
+
 
 library(car) ## for the ANOVA function
 plot(lm2)                    ## show the diagnostics on the screen
@@ -200,16 +209,38 @@ sqrt(v['SCHOOL','SCHOOL'] + (mean(MINORITY)^2)*v['MINORITY:SCHOOL','MINORITY:SCH
 
 # V TEST FOR MODEL (MIS)SPECIFICATION
 # RAMSEY (1969) RESET TEST (CONTROLLING FUNCTIONAL FORM AND OMITTED VARIABLES)
-### to do
+library(lmtest)
+lm1 <- lm(WAGE ~ SCHOOL + EXPER + UNION + MAR + BLACK, data=Males)
+lm1
+resettest(lm1, power=2:3, type="fitted")
+##### OUTPUT DIFFERENT FROM STATA
+
+##### drop yhat yhat2 yhat3 
+yhat = predict(lm1, data.frame(Males))
+yhat    
+summary(yhat)
+### Generate yhat2 yhat3 yhat4
+yhat2<-yhat^2
+summary(yhat2)
+yhat3<-yhat^3
+summary(yhat3)
+yhat4<-yhat^4
+summary(yhat4)
+
+### Regression with yhat2 yhat3 yhat4
+lm5 <- lm(WAGE ~ SCHOOL + EXPER + UNION + MAR + BLACK + yhat2 + yhat3 + yhat4, data=Males)
+lm5
+lm5$coef #### Same output as in STATA
+lmReduced <- update(lm5, .~. - yhat2 - yhat3 - yhat4)
+anova(lm5, lmReduced,test= 'F')      ### SAME OUTPUT AS IN STATA
 
 
 # Obtain AIC and BIC
 lm3<-lm(WAGE ~ SCHOOL + EXPER + EXPER2 + UNION + MAR + BLACK ,  data=Males)
 summary(lm3)
 AIC(lm3)
-stopifnot(all.equal(AIC(lm3),
-                    AIC(logLik(lm3))))
-BIC(lm3)
+stopifnot(all.equal(AIC(lm3),AIC(logLik(lm3))))
+BIC(lm3)  
 
 lm4 <- update(lm3, . ~ . -EXPER2)
 summary(lm4)
@@ -219,22 +250,43 @@ BIC(lm3, lm4)
 
 
 # Test Joint hypotheses with F-test
-### To do  
+lm3<-lm(WAGE ~ SCHOOL + EXPER + EXPER2 + UNION + MAR + BLACK ,  data=Males)
+summary(lm3)
+lm3$coef
 
 # Test restricted and unrestricted model with F-test
-### To do
+lm3<-lm(WAGE ~ SCHOOL + EXPER + EXPER2 + UNION + MAR + BLACK ,  data=Males)
+lm3
+lm3$coef 
+lmReduced <- update(lm3, .~. - EXPER - SCHOOL)
+anova(lm3, lmReduced,test= 'F')    ####F=298,15 
+
+
+lm3<-lm(WAGE ~ SCHOOL + EXPER + EXPER2 + UNION + MAR + BLACK ,  data=Males)
+lm3
+lm3$coef 
+lmReduced <- update(lm3, .~. - EXPER2)
+anova(lm3, lmReduced,test= 'F')  #### SAME RESULTS AS IN STATA F=16.027 AND Pr(F)=.00006337
+
 
 # VI MULTICOLLINEARITY 
-  
 # Since variable Experience is defined: EXPER=AGE-6, then generate variable AGE=EXPER+6
-
+AGE<-Males$EXPER+6
+summary(AGE)
 
 # Note that regressing both AGE and EXPER on logwage leads to exact multicollinearity and AGE is dropped
+lm3<-lm(WAGE ~ SCHOOL + AGE + UNION + MAR + BLACK - EXPER,  data=Males)
+lm3
+lm3$coef 
+
 
 # Calculate Variance Inflation Factors (alternatively Tolerance=1/VIF) for explanatory variables. Note that VIF above 10 or Tolerance below 0.1 are signs of warning.
+library(car)
+lm1 <- lm(WAGE ~ SCHOOL + EXPER + UNION + MAR + BLACK, data=Males)
+lm1
+lm1$coef
 
+vif(lm(WAGE ~ SCHOOL + EXPER + UNION + MAR + BLACK, data=Males))   ###SAME OUTPUT AS IN STATA FOR VIF
 
-############################################
-# Last commit ##############################
-############################################
-
+##### FIND THE TOLERANCE VIF AS LAST TASK#####
+##### Last commit
