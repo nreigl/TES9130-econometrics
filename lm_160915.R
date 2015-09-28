@@ -7,7 +7,7 @@ library(haven) # assuming stata13 files
 library(checkpoint)
 library(ProjectTemplate)
 library(explainr)
-library(magrittr)
+library(magrittry
 library(psych)
 library(MASS)
 library(arm)
