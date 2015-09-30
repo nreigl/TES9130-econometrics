@@ -12,7 +12,8 @@ library(magrittry)
         library(MASS)
         library(arm)
         library(broom)
-        
+        library(lmtest)
+        library(RFGLS)
         
         # set wd
         setwd("~/studium/TUT/econometric (phd) - TES9130/R/econometrics - TES9130/econometrics-TES9130")
@@ -75,38 +76,65 @@ lines(lowess(price,weight), col="red")
 
 ##### TESTING FOR HETEROSKEDASTICITY 
 ## Breusch-Pagan test for heteroskedasticity
+lm1<-lm(price ~ mpg + weight, data=Cars)
+lm1
+lm1$coef
+bptest(lm1)    ##Different output than STATA
 
 
 ## White test for heteroskedasticity
 
-
+# QUESTION: WHICH PACKAGE DO WE HAVE TO USE FOR WHITE TEST?
 
 
 ### White test step-by-step
-
+lm1<-lm(price ~ mpg + weight, data=Cars)
+resid <- residuals(lm1) 
+summary(resid)        
 
 ### Auxiliar regression. We do not have any useful information but we need it
-  
-  
+### Generate square residuals
+resid2<-resid^2  
+summary(resid2)
+### Generate square mpg
+mpg2<- mpg^2
+summary(mpg2)
+### Generate square weight
+weight2<- weight^2
+summary(weight2)
+
+### Generate interaction mpg and weigth
+mpg_weight<- Cars$mpg*weight
+summary(mpg_weight)
+lm2<- lm(resid2 ~ mpg2 + weight2 + mpg + weight + mpg_weight, data=Cars)
+lm2
+lm2$coef
+
+### Compute the statistic nR2 and test with chi-square distribution
+# QUESTION: HOW DO WE COMPUTE nR2? After we compute it, run chi-square!
+
+
 ### CALCULATE AND COMPARE OLS WITH FGLS OR WLS
+lm1<-lm(price ~ mpg + weight, data=Cars)
+### Genetare dummy named "one" 
+one<- 1
+summary(one)
+### Generate the Non Linear Least Squares
+
   
   
 ### CALCULATE FGLS OR WLS MANUALLY: b_FGLS=inv(X'WX)X'WY, where W is the weighting or transformation matrix
 
-
 ### Regress WLS with STATA procedure
-
 
 ### For every model we have to estimate vector coefficients and variance-covariance
 
-
 ### CALCULATE THE WHITE (1980) ROBUST COVARIANCE MATRIX: inv(xx)*(N/N-k)*A*inv(xx), where A=sum[(x_i)'e_i(e_i)'x_i]
-
 
 ### generate id for each observation
 
-
 ### Regress the model with robust standard errors option and compare the results.
+
 
 
 #### Last commit ######
