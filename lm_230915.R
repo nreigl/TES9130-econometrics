@@ -79,7 +79,12 @@ lines(lowess(price,weight), col="red")
 lm1<-lm(price ~ mpg + weight, data=Cars)
 lm1
 lm1$coef
-bptest(lm1)    ##Different output than STATA
+bptest(lm1)    ##Different output from STATA (in STATA we reject the null hypotheses, in R not!)
+### We have to reject the null hypotheses 
+running a global validation of linear model assumptions (gvlma) on the lm object.
+gvlma(x = lm1) 
+par(mfrow=c(2,1))
+plot(lm1)
 
 
 ## White test for heteroskedasticity
