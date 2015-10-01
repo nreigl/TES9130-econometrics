@@ -14,13 +14,15 @@ library(magrittry)
         library(broom)
         library(lmtest)
         library(RFGLS)
-        
+        library(gvlma) # Methods from the paper: Pena, EA and Slate, EH, ``Global Validation of Linear Model Assumptions,'' J. American Statistical Association, 101(473):341-354, 2006
+
         # set wd
         setwd("~/studium/TUT/econometric (phd) - TES9130/R/econometrics - TES9130/econometrics-TES9130")
 
 #UPLOAD THE DATASET
-Cars <- read.dta("Dataset_Cars old.dta")
-
+# Cars <- read.dta("Dataset_Cars old.dta") # depending in your system. 
+        Cars <- read.csv("~/studium/TUT/econometric (phd) - TES9130/R/econometrics - TES9130/econometrics-TES9130/Cars.csv") # csv file is on github
+        
 ## Heteroskedasticity Plot
 #BROWSE
 View(Cars)
@@ -90,7 +92,7 @@ lm1
 lm1$coef
 bptest(lm1)    ##Different output from STATA (in STATA we reject the null hypotheses, in R not!)
 ### We have to reject the null hypotheses 
-running a global validation of linear model assumptions (gvlma) on the lm object.
+# running a global validation of linear model assumptions (gvlma) on the lm object.
 gvlma(x = lm1) 
 par(mfrow=c(2,1))
 plot(lm1)
