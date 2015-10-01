@@ -51,27 +51,36 @@ absresid<- abs(resid)
 summary(absresid)
 
 #### Construct the graph for two variables and combine them
-#### Scatterplot price-mpg
+# Scatterplot Price-mpg
 attach(Cars)
-plot(price, mpg, main="Scatterplot",xlab="mpg ", ylab="Price ", pch=20, col="blue")
-     lines(lowess(price,mpg), col="red") ### Lowess line
+plot(Cars$mpg, Cars$price, 
+     main="Scatterplot",
+     xlab="mpg ", 
+     ylab="Price ", pch=20, col="blue")
+     lines(lowess(mpg, price), col="red") ### Lowess line
 
-#### Scatterplot price-weight
+# Scatterplot Price-weight
 attach(Cars)
-plot(price, weight, main="Scatterplot",xlab="weight ", ylab="Price ", pch=20, col="blue")
-      lines(lowess(price,weight), col="red")
-
-### Problems with x-axis and y-axis. They are reversed!!!! WHY?
+plot(Cars$weight, Cars$price, 
+     main="Scatterplot",
+     xlab="weight ", ylab="Price ", pch=20, col="blue")
+     lines(lowess(weight,price), col="red")
 
 ##Combine two graphs above
 attach(Cars)
 par(mfrow=c(1,2))
-plot(price, mpg, main="Scatterplot",xlab="mpg ", ylab="Price ", pch=20, col="blue")
-lines(lowess(price,mpg), col="red") ### Lowess line
+plot(Cars$mpg, Cars$price, 
+     main="Scatterplot",
+     xlab="mpg ", 
+     ylab="Price ", pch=20, col="blue")
+lines(lowess(mpg, price), col="red") ### Lowess line
 
-plot(price, weight, main="Scatterplot",xlab="weight ", ylab="Price ", pch=20, col="blue")
-lines(lowess(price,weight), col="red")
-### FIX THE COMBINE GRAPH WHEN AXISES PROBLEM IS SOLVED.
+plot(Cars$weight, Cars$price, 
+     main="Scatterplot",
+     xlab="weight ", ylab="Price ", pch=20, col="blue")
+lines(lowess(weight,price), col="red")
+
+### Problems with x-axis and y-axis solved. Graphs look the same as in STATA
 
 
 ##### TESTING FOR HETEROSKEDASTICITY 
