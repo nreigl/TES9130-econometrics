@@ -189,7 +189,7 @@ print(plot(eff_cf, multiline=TRUE))
 eff.pres <- allEffects(lm2, xlevels=50)
 plot(eff.pres)
 
-# Calculate average marginal effect by hand
+# Calculate average marginal effect manually
 cf1 <- summary(lm2)$coef
 me_SCHOOL <- cf1['SCHOOL',1] + cf1['MINORITY:SCHOOL',1]*MINORITY # MEs of SCHOOL given MINORITY
 me_MINORITY <- cf1['MINORITY',1] + cf1['MINORITY:SCHOOL',1]*Males$SCHOOL # MEs of MINORITY given SCHOOL
