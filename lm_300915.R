@@ -12,7 +12,7 @@ library(magrittr)
         library(MASS)
         library(arm)
         library(broom)
-        library(gmm)) # Generalized Method of Moments and Generalized Empirical Likelihood
+        library(gmm) # Generalized Method of Moments and Generalized Empirical Likelihood
         library(mvtnorm)
         library(sem) # General Structural Equation Models
 
@@ -128,7 +128,9 @@ summary.ivreg
 ## F-test on the first stage regression; Null is that the instrument is weak.
 ## Wu- Hausman reject H_{0}.  alternative hypothesis, b0 is consistent, whereas b1 isn’t. 
 ## Sargan test of overidentifying  is not applicable as there are no more instruments than regressors)
-                  ### Interpretation of Wu-Hausman??
+
+### Interpretation of Wu-Hausman?? I assume rejecting H_{0} would mean IV is consistent and OLS is not. Correct?
+
 
 
                   
