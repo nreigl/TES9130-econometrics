@@ -33,15 +33,15 @@ set.seed(10001)
 # $\mathbb{E}(y) = \beta_{0}+\beta_{1} x+u $
 
 # where $ x^{*} $is some latent part of $x$ and $u$ is still unobserved
-# Generate x* and c and using a common variance. $\rho = 0.5$
+# Generate x* and u and using a common variance. $\rho = 0.5$
 ## NB relating to the lab exercise $x^${*}$ relates to $v$!! 
 xStarAndU <- mvrnorm(1000, c(20, 15), matrix(c(1, 0.5, 0.5, 1), 2, 2))
 xStar <- xStarAndU[, 1]
 u <- xStarAndU[, 2]
 
-# Generate instrument z (which is purely random)
+# Generate instrument z. IV z is purely random
 z <- rnorm(1000)
-# Generate regressor x which is correlated with z, and with 
+# Generate regressor x which is correlated with z, and with u
 x <- xStar + z
 # using 1 makes it easy to estimate how 'wrong' an estimator is. Also create some noise on y
 y <- 1 + x + u + rnorm(1000, 0, 0.5)
@@ -50,8 +50,8 @@ mat<-cbind(y,x,z,u,xStar)
 cor(mat)
 cov(mat)
 
-cor(x,u) ## we see a moderate correlation of x and u (positiv) --> we have an endogenitiy problem 
-cor(z,u) ## Z instrument: is not correlated with error term u. z should be independent of u by assumtion
+cor(x,u) ## we see a moderate (positiv) correlation of x and u  --> we have an endogenitiy problem 
+cor(z,u) ## Z instrument: is not correlated with error term u. z is independent of u by assumption (and simulation specification)
 
 pairs(mat)
 
@@ -98,7 +98,6 @@ summary(lm3)
 library("AER")
 lmIV <- ivreg(y ~ x | z)
 summary(lmIV) ## IV estimates are unbiased
-summary(lmIV, diagnostics = T)
 
 
 ##############################################
@@ -121,10 +120,10 @@ hausman.systemfit(sm_iv, sm_ols)
                   
 ## summary diagnostics from the AER package
 summary(lmIV, diagnostics = T)
-summary.ivreg
+## p-values are similar and lead to the same conclusion
 
 
-## Interpretation of summary ivreg 
+## Interpretation of summary ivreg statistic 
 ## F-test on the first stage regression; Null is that the instrument is weak.
 ## Wu- Hausman reject H_{0}.  alternative hypothesis, b0 is consistent, whereas b1 isn’t. 
 ## Sargan test of overidentifying  is not applicable as there are no more instruments than regressors)
