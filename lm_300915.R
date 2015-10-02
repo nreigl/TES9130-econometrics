@@ -13,12 +13,12 @@ library(magrittry
         library(arm)
         library(broom)
         library(gmm)) # Generalized Method of Moments and Generalized Empirical Likelihood
-        library(mvtnorm)
-        library(sem) # General Structural Equation Models
-        
-        # set wd
-        setwd("~/studium/TUT/econometric (phd) - TES9130/R/econometrics - TES9130/econometrics-TES9130")
-        
+library(mvtnorm)
+library(sem) # General Structural Equation Models
+
+# set wd
+setwd("~/studium/TUT/econometric (phd) - TES9130/R/econometrics - TES9130/econometrics-TES9130")
+
 
 
 ## idea for the simulation  is taken from Jacob Simmering and adapted for course needs
@@ -29,10 +29,10 @@ rm(list=ls())
 set.seed(10001)
 
 # $\mathbb{E}(x) = \alpha_{0}+\alpha_{1} x^{*}+\alpha_{2}z $
-  # and 
+# and 
 # $\mathbb{E}(y) = \beta_{0}+\beta_{1} x+u $
 
-  # where $ x^{*} $is some latent part of $x$ and $u$ is still unobserved
+# where $ x^{*} $is some latent part of $x$ and $u$ is still unobserved
 # Generate x* and c and using a common variance. $\rho = 0.5$
 ## NB relating to the lab exercise $x^${*}$ relates to $v$!! 
 xStarAndU <- mvrnorm(1000, c(20, 15), matrix(c(1, 0.5, 0.5, 1), 2, 2))
@@ -103,6 +103,33 @@ summary(lmIV) ## IV estimates are unbiased
 ##############################################
 ## not calculated the IV estimator manually ##
 ##############################################
+
+
+## data
+library("AER")
+data("USConsump1993", package = "AER")
+usc <- as.data.frame(USConsump1993)
+usc$investment <- usc$income - usc$expenditure
+
+## 2SLS via ivreg(), Hausman by hand
+fm_ols <- lm(expenditure ~ income, data = usc)
+fm_iv <- ivreg(expenditure ~ income | investment, data = usc)
+cf_diff <- coef(fm_iv) - coef(fm_ols)
+vc_diff <- vcov(fm_iv) - vcov(fm_ols)
+x2_diff <- as.vector(t(cf_diff) %*% solve(vc_diff) %*% cf_diff)
+pchisq(x2_diff, df = 2, lower.tail = FALSE)
+
+## 2SLS via systemfit(), Hausman via hausman.systemfit()
+install.packages("systemfit")
+library("systemfit")
+sm_ols <- systemfit(expenditure ~ income, data = usc, method = "OLS")
+sm_iv <- systemfit(expenditure ~ income, data = usc, method = "2SLS",
+                   inst = ~ investment)
+hausman.systemfit(sm_iv, sm_ols
+                  
+
+
+
 
 
 ## ivreg2
@@ -192,27 +219,5 @@ ivreg2()
 
 
 
-## data
-library("AER")
-data("USConsump1993", package = "AER")
-usc <- as.data.frame(USConsump1993)
-usc$investment <- usc$income - usc$expenditure
-
-## 2SLS via ivreg(), Hausman by hand
-fm_ols <- lm(expenditure ~ income, data = usc)
-fm_iv <- ivreg(expenditure ~ income | investment, data = usc)
-cf_diff <- coef(fm_iv) - coef(fm_ols)
-vc_diff <- vcov(fm_iv) - vcov(fm_ols)
-x2_diff <- as.vector(t(cf_diff) %*% solve(vc_diff) %*% cf_diff)
-pchisq(x2_diff, df = 2, lower.tail = FALSE)
-
-## 2SLS via systemfit(), Hausman via hausman.systemfit()
-install.packages("systemfit")
-library("systemfit")
-sm_ols <- systemfit(expenditure ~ income, data = usc, method = "OLS")
-sm_iv <- systemfit(expenditure ~ income, data = usc, method = "2SLS",
-                   inst = ~ investment)
-hausman.systemfit(sm_iv, sm_ols
-                  
                   
                   
