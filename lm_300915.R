@@ -105,27 +105,19 @@ summary(lmIV) ## IV estimates are unbiased
 ##############################################
 
 
-## data
-library("AER")
-data("USConsump1993", package = "AER")
-usc <- as.data.frame(USConsump1993)
-usc$investment <- usc$income - usc$expenditure
-
-## 2SLS via ivreg(), Hausman by hand
-fm_ols <- lm(expenditure ~ income, data = usc)
-fm_iv <- ivreg(expenditure ~ income | investment, data = usc)
+## Caclulate Hausman test manually:
+fm_ols <- lm(y ~ x)
+fm_iv <- ivreg(y ~ x | z)
 cf_diff <- coef(fm_iv) - coef(fm_ols)
 vc_diff <- vcov(fm_iv) - vcov(fm_ols)
 x2_diff <- as.vector(t(cf_diff) %*% solve(vc_diff) %*% cf_diff)
 pchisq(x2_diff, df = 2, lower.tail = FALSE)
 
 ## 2SLS via systemfit(), Hausman via hausman.systemfit()
-install.packages("systemfit")
 library("systemfit")
-sm_ols <- systemfit(expenditure ~ income, data = usc, method = "OLS")
-sm_iv <- systemfit(expenditure ~ income, data = usc, method = "2SLS",
-                   inst = ~ investment)
-hausman.systemfit(sm_iv, sm_ols
+sm_ols <- systemfit(y ~ x, method = "OLS")
+sm_iv <- systemfit(y ~ x , method = "2SLS", inst = ~ z)
+hausman.systemfit(sm_iv, sm_ols)
                   
 
 
