@@ -51,7 +51,7 @@ cor(mat)
 cov(mat)
 
 cor(x,u) ## we see a moderate (positiv) correlation of x and u  --> we have an endogenitiy problem 
-cor(z,u) ## Z instrument: is not correlated with error term u. z is independent of u by assumption (and simulation specification)
+cor(z,u) ## Z instrument: is not strongly correlated with error term u. z is independent of u by assumption (and simulation specification)
 
 pairs(mat)
 
@@ -70,7 +70,8 @@ lm1endo<-lm(y ~ x)
 summary(lm1endo)
 beta_x_endo <- summary(lm1endo)$coefficients[2, 1]
 (beta_x_endo-beta_x)*100
-## the estimate was about 128% of the true effect of x
+## the estimate was about 128% of the true effect of x. Without taking care of the endoginity problem we
+## overestimate the true effect of x. 
 
 # plot residual behaviour 
 opar <- par(mfrow = c(2,2), oma = c(0, 0, 1.1, 0))
@@ -131,5 +132,44 @@ summary(lmIV, diagnostics = T)
 ### Interpretation of Wu-Hausman?? I assume rejecting H_{0} would mean IV is consistent and OLS is not. Correct?
 
 
+# read in data
+Schooling<-read_dta("Schooling_dta.dta")
+summary(Schooling)
+View(Schooling)
 
-                  
+#### Estimate OLS
+lm1<- lm(lwage76 ~ ed76 +  exp76 + exp762 + black + smsa76, data=Schooling)  
+lm1
+lm1$coef
+summary(lm1)
+str(lm1)     #### Same output as in STATA
+
+
+#### Estimate reduced from w.r.t ed76
+lm1<- lm(ed76 ~ exp76 + exp762 + black + smsa76 + momed + daded, data=Schooling)  
+lm1
+lm1$coef
+summary(lm1)
+str(lm1) 
+
+
+#### Test for checking the possible weak correlation problem for potential instruments - parents education upon schooling.
+fs = lm(ed76 ~ exp76 + exp762 + black + smsa76 + momed + daded, data=Schooling)
+# null first-stage (i.e. exclude IVs):
+fn = lm(ed76 ~ exp76 + exp762 + black + smsa76, data=Schooling)
+# simple F-test
+waldtest(fs, fn)$F[2]      #### Same output as in STATA
+
+
+### Run IV regression where experience and schooling are instrumented with age and mother and father education
+# Generate age762 square
+age762<- Schooling$age76^2
+summary(age762)
+
+
+#### 2SLS ESTIMATION
+names(Schooling)
+2SLS<- ivreg(lwage76 ~ ed76 + exp76 + exp762 | black + smsa76 + momed + daded + age76 + age762, data=Schooling)
+summary(2SLS)
+#### OUTPUT DIFFERENT FROM STATA. 
+#### Instrumented:  ed76 exp76 exp762   while IV are black smsa76 momed daded age76 age762
