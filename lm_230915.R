@@ -121,15 +121,20 @@ summary(weight2)
 
 ### Generate interaction mpg and weigth
 mpg_weight<- Cars$mpg*weight
-summary(mpg_weight)
+summary(mpg_weight)               ###Same output as in STATA
 lm2<- lm(resid2 ~ mpg2 + weight2 + mpg + weight + mpg_weight, data=Cars)
 lm2
-lm2$coef
 
 ### Compute the statistic nR2 and test with chi-square distribution
-# QUESTION: HOW DO WE COMPUTE nR2? After we compute it, run chi-square!
-
-
+summary(lm2)$r.squared  
+###or we can also run these commands
+N<-(lm2$df)+length(lm2$coef)
+R2<-summary(lm2)$r.squared 
+R2
+whitestat<- 74*0.1713119
+whitestat       ###Same output as in STATA.
+                                                ### QUESTION: how do we compute "chi2tail"?
+                
 ### CALCULATE AND COMPARE OLS WITH FGLS OR WLS
 lm1<-lm(price ~ mpg + weight, data=Cars)
 ### Genetare dummy named "one" 
