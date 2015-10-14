@@ -15,6 +15,7 @@ library(magrittr)
         library(gmm) # Generalized Method of Moments and Generalized Empirical Likelihood
         library(mvtnorm)
         library(sem) # General Structural Equation Models
+        library(stargazer) #
 
 # set wd
 setwd("~/studium/TUT/econometric (phd) - TES9130/R/econometrics - TES9130/econometrics-TES9130")
@@ -144,14 +145,12 @@ lm1$coef
 summary(lm1)
 str(lm1)     #### Same output as in STATA
 
-
 #### Estimate reduced from w.r.t ed76
-lm1<- lm(ed76 ~ exp76 + exp762 + black + smsa76 + momed + daded, data=Schooling)  
-lm1
-lm1$coef
-summary(lm1)
-str(lm1) 
-
+lm2<- lm(ed76 ~ exp76 + exp762 + black + smsa76 + momed + daded, data=Schooling)  
+lm2
+lm2$coef
+summary(lm2)
+str(lm2) 
 
 #### Test for checking the possible weak correlation problem for potential instruments - parents education upon schooling.
 fs = lm(ed76 ~ exp76 + exp762 + black + smsa76 + momed + daded, data=Schooling)
@@ -168,8 +167,11 @@ summary(age762)
 
 
 #### 2SLS ESTIMATION
-names(Schooling)
-2SLS<- ivreg(lwage76 ~ ed76 + exp76 + exp762 | black + smsa76 + momed + daded + age76 + age762, data=Schooling)
-summary(2SLS)
+SLS<- ivreg(lwage76 ~ ed76 + exp76 + exp762 | black + smsa76 + momed + daded + age76 + age762, data=Schooling)
+summary(SLS) 
 #### OUTPUT DIFFERENT FROM STATA. 
 #### Instrumented:  ed76 exp76 exp762   while IV are black smsa76 momed daded age76 age762
+stargazer(lm1, SLS,  type="text",  out="models.txt")
+
+
+### TASK COMPLETED ####
