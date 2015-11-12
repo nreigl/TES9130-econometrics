@@ -2,7 +2,7 @@
 
 ### Load and require snippet
 # install necessary packages
-PACKAGES<-c("dplyr","vars","brew", "seasonal")
+PACKAGES<-c("dplyr","vars","brew", "seasonal", "boot", "Hmisc")
 
 inst<-match(PACKAGES, .packages(all=TRUE))
 need<-which(is.na(inst))
@@ -17,35 +17,148 @@ CPI_1970_2007 <- read.table("~/studium/TUT/econometric (phd) - TES9130/matlab/CP
 
 
 # format as time series object
-CPI<-ts(CPI_1970_2007, start = c(1970,1), freq = 12)
+CPI.ts<-ts(CPI_1970_2007, start = c(1970,1), freq = 12)
 
-plot(decompose(CPI))
+# check for seasonal component
+plot(decompose(CPI.ts))
+## no clear visible seasonal component
+
+plot(CPI.ts)
+## probably struc. break starting in the great moderation
+## no visible trend
 
 
-# The installation of the seasonal can be tricky
-# ## See: 
-# Getting X-13
-# 
-# seasonal does not include the binary executables of X-13ARIMA-SEATS. They can be obtained precompiled from here (Windows: x13ashtmlall.zip). There are guides for building it from source for Ubuntu or Mac OS-X.
-# 
-# Download the file, unzip it and copy x13ashtml.exe (or x13ashtml, on Linux or OS-X) to any desired location on your file system.
-# Telling R where to find X-13
-# 
-# Next, you need to tell seasonal where to find the binary executables of X-13ARIMA-SEATS, by setting the specific environmental variable X13_PATH. This may be done during your active session in R:
-#   
-#   Sys.setenv(X13_PATH = "YOUR_X13_DIRECTORY")
-# 
-# Exchange YOUR_X13_DIRECTORY with the path to your installation of X-13ARIMA-SEATS. Note that the Windows path C:\something\somemore has to be entered UNIX-like C:/something/somemore or C:\\something\\somemore. You can always check your installation with:
-#   
-#   checkX13()
-# 
-# If it works, you may want to set the environmental variable permanently, by adding the Sys.setenv line to one of your .Rprofile files. The easiest is to use the one located in your home directory, which can be written directly from R:
-#   
-#   write('Sys.setenv(X13_PATH = "YOUR_X13_DIRECTORY")', 
-#         file = "~/.Rprofile", append = TRUE)
-# 
-# If the file does not exist (by default), it will be created. Make sure that you get the quotes right: double quotes around your directory, single quotes around the whole Sys.setenv line, such that R understands your string. Check first that the the Sys.setenv line works correctly; once it is written you may have to edit .Rprofile manually. (Or add a second, overwriting line to it.) For other ways to set an environmental variable permanently in R, see ?Startup.
+#test for stationarity/ unit root 
+## systemic testing structure
+acf(CPI.ts)
+pacf(CPI.ts)
 
-SA_CPI<-seas(CPI)
-out(SA_CPI)
-plot(SA_CPI)
+adf_p2_SA_CPI_data.ts<-summary(ur.df(SA_CPI_data.ts, type = "drift", lags = 2)) # constant
+adf_p12_SA_CPI_data.ts<-summary(ur.df(SA_CPI_data.ts, type = "drift", lags = 12)) # constant
+adf_p24_SA_CPI_data.ts<-summary(ur.df(SA_CPI_data.ts, type = "drift", lags = 24)) # constant
+
+# first diff. 
+acf(diff(CPI.ts))
+pacf(diff(CPI.ts))
+
+adf_p1_SA_CPI_data.ts<-summary(ur.df(diff(SA_CPI_data.ts), type = "none", lags = 1)) # constant
+adf_p1_SA_CPI_data.ts<-summary(ur.df(diff(SA_CPI_data.ts), type = "none", lags = 12)) # constant
+adf_p1_SA_CPI_data.ts<-summary(ur.df(diff(SA_CPI_data.ts), type = "none", lags = 24)) # constant
+
+kpss_drift_SA_CPI_data.ts<-summary(ur.kpss(diff(SA_CPI_data.ts), type = "mu")) # constant
+
+# Find the AR order
+m1_mean<-ar(CPI.ts, demean = TRUE)
+m1<-ar(CPI.ts)
+m1$order
+m1_mean$order
+m1$aic
+m1_mean$aic
+
+
+# attribute AR order value
+AR25<-m1$order
+
+m2<-arima(CPI.ts, order = c(AR25, 0, 0))
+summary(m2)
+
+# box test
+Box.test(m2$residuals, lag = 25, type = "Ljung")
+# analyze the residuals from the fit for any signs of non–randomness.
+tsdiag(m2)
+
+
+
+# residuals
+m2$residuals
+plot(m2$residuals)
+
+# residual standard error
+sqrt(m2$sigma2)
+
+# Test for process parameters
+shapiro.test(CPI.ts)
+shapiro.test(diff(CPI.ts))
+
+
+wilcox.test(CPI.ts, diff(CPI.ts))
+
+
+# work with seas. unadj. data!!
+# test for stationarity
+# there does not seem to be a trend. exclude a trend
+# estimate lag order via VAR: set max. lag structure to 24 max lags + intercept. no dummy
+## check the t-statistics for overfitting: plus minus 2 is boarderline 
+# get VAR model statistics
+# test acf, pacf, normality, 
+
+# run the analysis on the undiff. and diff. model
+# forecast: specify horizon and interval
+
+
+# write a proper simulation in R
+# 
+
+
+
+var.2c <- VAR(CPI.ts, p = 2, type = "const")
+plot(var.2c)
+
+
+
+
+# check for stationartiy
+adf_p2_SA_CPI_data.ts<-summary(ur.df(SA_CPI_data.ts, type = "trend", lags = 2)) # trend and constant
+adf_p1_SA_CPI_data.ts<-summary(ur.df(diff(SA_CPI_data.ts), type = "drift", lags = 1)) # constant
+adf_p1_SA_CPI_data.ts
+adf_p2_SA_CPI_data.ts
+
+kpss_trend_SA_CPI_data.ts<-summary(ur.kpss(SA_CPI_data.ts, type = "tau")) # trend and constant
+kpss_drift_SA_CPI_data.ts<-summary(ur.kpss(diff(SA_CPI_data.ts), type = "mu")) # constant
+
+adf_p2_SA_CPI_data.ts<-summary(ur.df(CPI.ts, type = "trend", lags = 2)) # trend and constant
+adf_p1_SA_CPI_data.ts<-summary(ur.df(diff(CPI.ts), type = "drift", lags = 1)) # constant
+plot(diff(CPI.ts))
+
+adf_p1_SA_CPI_data.ts
+adf_p2_SA_CPI_data.ts
+
+
+
+
+
+# quickly simulate an AR 
+set.seed(123)
+ts_AR <- arima.sim(n = 10000, list(ar = 0.5))
+
+
+ar_fun <- function(ts) c(ar = coef(arima(ts, order = c(1, 0, 0),
+                                         include.mean = FALSE)), ts = ts)
+
+ar_sim <- function(res, n.sim, ran.args) {
+  rg <- function(n, res) sample(res, n, replace = TRUE)
+  ts <- ran.args$ts
+  model <- ran.args$model
+  arima.sim(model = model, n = n.sim,
+            rand.gen = rg, res = c(res))
+}
+
+ar_fit <- arima(ts_AR, order = c(1, 0, 0), include.mean = FALSE)
+ts_res <- residuals(ar_fit)
+ts_res <- ts_res - mean(ts_res)
+ar_model <- list(ar = coef(ar_fit))
+
+
+set.seed(1)
+ar_boot <- tsboot(ts_res, ar_fun,
+                  R = 99, sim = "model",
+                  n.sim = 100, orig.t = FALSE,
+                  ran.gen = ar_sim,
+                  ran.args = list(ts = ts_AR, model = ar_model))
+
+coefmat <- apply(ar_boot$t, 1, "[", 1)
+seriesmat <- apply(ar_boot$t, 1, "[", -1)
+
+hist(coefmat)
+
+
