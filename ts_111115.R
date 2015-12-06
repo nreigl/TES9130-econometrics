@@ -2,7 +2,7 @@
 
 ### Load and require snippet
 # install necessary packages
-PACKAGES<-c("dplyr","vars","brew", "seasonal", "boot", "Hmisc")
+PACKAGES<-c("dplyr","vars","brew", "seasonal", "boot", "Hmisc", "forecast")
 
 inst<-match(PACKAGES, .packages(all=TRUE))
 need<-which(is.na(inst))
@@ -61,13 +61,12 @@ AR25<-m1$order
 
 m2<-arima(CPI.ts, order = c(AR25, 0, 0))
 summary(m2)
+m2
 
 # box test
 Box.test(m2$residuals, lag = 25, type = "Ljung")
 # analyze the residuals from the fit for any signs of non–randomness.
 tsdiag(m2)
-
-
 
 # residuals
 m2$residuals
@@ -84,81 +83,61 @@ shapiro.test(diff(CPI.ts))
 wilcox.test(CPI.ts, diff(CPI.ts))
 
 
-# work with seas. unadj. data!!
-# test for stationarity
-# there does not seem to be a trend. exclude a trend
-# estimate lag order via VAR: set max. lag structure to 24 max lags + intercept. no dummy
-## check the t-statistics for overfitting: plus minus 2 is boarderline 
-# get VAR model statistics
-# test acf, pacf, normality, 
-
-# run the analysis on the undiff. and diff. model
-# forecast: specify horizon and interval
-
-
-# write a proper simulation in R
-# 
-
-
-
-var.2c <- VAR(CPI.ts, p = 2, type = "const")
-plot(var.2c)
-
-
-
-
-# check for stationartiy
-adf_p2_SA_CPI_data.ts<-summary(ur.df(SA_CPI_data.ts, type = "trend", lags = 2)) # trend and constant
-adf_p1_SA_CPI_data.ts<-summary(ur.df(diff(SA_CPI_data.ts), type = "drift", lags = 1)) # constant
-adf_p1_SA_CPI_data.ts
-adf_p2_SA_CPI_data.ts
-
-kpss_trend_SA_CPI_data.ts<-summary(ur.kpss(SA_CPI_data.ts, type = "tau")) # trend and constant
-kpss_drift_SA_CPI_data.ts<-summary(ur.kpss(diff(SA_CPI_data.ts), type = "mu")) # constant
-
-adf_p2_SA_CPI_data.ts<-summary(ur.df(CPI.ts, type = "trend", lags = 2)) # trend and constant
-adf_p1_SA_CPI_data.ts<-summary(ur.df(diff(CPI.ts), type = "drift", lags = 1)) # constant
-plot(diff(CPI.ts))
-
-adf_p1_SA_CPI_data.ts
-adf_p2_SA_CPI_data.ts
-
-
-
-
-
-# quickly simulate an AR 
+# work with simulated time series 
 set.seed(123)
 ts_AR <- arima.sim(n = 10000, list(ar = 0.5))
-
-
-ar_fun <- function(ts) c(ar = coef(arima(ts, order = c(1, 0, 0),
-                                         include.mean = FALSE)), ts = ts)
-
-ar_sim <- function(res, n.sim, ran.args) {
-  rg <- function(n, res) sample(res, n, replace = TRUE)
-  ts <- ran.args$ts
-  model <- ran.args$model
-  arima.sim(model = model, n = n.sim,
-            rand.gen = rg, res = c(res))
-}
 
 ar_fit <- arima(ts_AR, order = c(1, 0, 0), include.mean = FALSE)
 ts_res <- residuals(ar_fit)
 ts_res <- ts_res - mean(ts_res)
 ar_model <- list(ar = coef(ar_fit))
 
-
-set.seed(1)
-ar_boot <- tsboot(ts_res, ar_fun,
-                  R = 99, sim = "model",
-                  n.sim = 100, orig.t = FALSE,
-                  ran.gen = ar_sim,
-                  ran.args = list(ts = ts_AR, model = ar_model))
-
-coefmat <- apply(ar_boot$t, 1, "[", 1)
-seriesmat <- apply(ar_boot$t, 1, "[", -1)
-
-hist(coefmat)
+# How to simulate specific tail processes
+# mildly long-tailed
+arima.sim(n = 63, list(ar = c(0.8897, -0.4858), ma = c(-0.2279, 0.2488)),
+          rand.gen = function(n, ...) sqrt(0.1796) * rt(n, df = 5))
 
 
+# ADF test 
+set.seed(4321)
+E=rnorm(340)
+ts1<-cumsum(E)
+plot(ts1, type="line")
+
+# test manually
+# test if the regression coefficient in the linear regression is – or not – null
+lags=0
+z=diff(ts1)
+n=length(z)
+z.diff=embed(z, lags+1)[,1]
+z.lag.1=ts1[(lags+1):n]
+summary(lm(z.diff~0+z.lag.1 ))
+
+# testing procedure is based on the Student’s t value
+summary(lm(z.diff~0+z.lag.1 ))$coefficients[1,3]
+
+# Now, use the df test from the urca package
+df=ur.df(ts1,type="none",lags=0)
+summary(df)
+## the value for the t-statistic is the same
+
+# Simple time series forecasts
+## simulate an AR(2) process
+set.seed(321)
+ts2 <- arima.sim(n = 200, list(ar = c(0.8, -0.6)), innov = rnorm(200))
+ts.plot(ts2)
+acf(ts2)
+pacf(ts2)
+
+# for h steps ahead forecast with confidence intervals
+plot(predict(ts2, h = 40))
+
+?arima.sim
+# now, simulate an ARMA (2,3)
+ts3 <-  arima.sim(list(order = c(2,0,2), ar = c(0.8, -0.6), ma= c(0.8, 0.6)), n = 200, innov = rnorm(200))
+ts.plot(ts3)
+acf(ts3)
+pacf(ts3)
+
+# for h steps ahead forecast with confidence intervals
+plot(predict(ts3, h = 100))

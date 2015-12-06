@@ -26,7 +26,8 @@ head(CPI_VAR.ts)
 
 # variable names
 # Y_CPI_NonEnergy_RealS_FF197001-200706
-
+#### create a restriction matrix for the monetary policiy shock
+# 
 
 
 # run standard VAR descriptive statistics
