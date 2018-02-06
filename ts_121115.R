@@ -18,11 +18,11 @@ CPI_VAR <- read.csv("~/studium/TUT/econometric (phd) - TES9130/matlab/Y_CPI_Non.
 
 CPI_VAR.ts<-ts(CPI_VAR,  start = c(1970,1), freq = 12)
 
-View(CPI_VAR.ts)
-
 colnames(CPI_VAR.ts)<-c("Output","CPI", "CPI_exEn", "StockRe", "FedFund"  )
-
 head(CPI_VAR.ts)
+
+
+plot(CPI_VAR.ts, type = "l")
 
 # variable names
 # Y_CPI_NonEnergy_RealS_FF197001-200706

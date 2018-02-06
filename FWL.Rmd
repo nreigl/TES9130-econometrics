@@ -1,0 +1,55 @@
+---
+title: "Frisch Waugh Lovell Theorem"
+author: "Nicolas Reigl"
+date: "7 Oct 2015"
+output: pdf_document
+---
+
+Draw sampel variable for multivariate normal distribution. 
+Sigma, correlation matrix at 0.6
+```{r}
+rm(list=ls())
+
+library(mvtnorm) 
+X<-rmvnorm(200, mean = c(0,0), sigma= matrix(data = c(1,0.6,0.6,1), nrow=2, ncol = 2)) 
+plot(X[,1]-X[,2])
+cor(X[,1], X[,2]) # correlation of x1 and x2
+X<-cbind(X, rep(rep(1,200))) # bind a constant variable to x (constant term in the regression)
+b<-c(-3, 1, 0.5) # line with a slope of 1
+y<-X%*%b+rnorm(200, sd = 1)
+
+
+summary(lm(y~X-1))
+
+# First FWL plot
+par(mfrow = c (1, 2))
+plot (y~ X[,2], main = "Raw Scatterplot") # plot x2 against y
+summary(lm(y~X[,2]))
+abline(coefficients(lm(y~X[,2])))
+abline(0.5, 1, lty= 2) # create a line with a slope of 1 
+```
+
+
+So scatterplots are not very good explanation tools in cases of strongly correlated variables with effects that go into different directions
+x2 is sucking up the negative correlation with x1. 
+scatterplot is missleading
+
+```{r}
+# FWL corrected scatterplot
+z<-X[,c(1,3)] # extract all the rows of x2 
+
+y.res<-y-predict(lm(y~z-1)) #  regression of x1 and a constant without x2
+x.res<-X[,2]-predict(lm(X[,2]~z-1)) # residuals of the y.reg
+
+
+summary(lm(y.res~x.res-1)) # run a y residuals vs. the x residuals
+# the beta is is the same as in the first regression
+
+# fwl corrected scatterplot
+plot(y.res~x.res, main= "FWL-corrected Scatterplot")
+summary(lm(y.res~x.res-1)) # 
+abline(coefficients(lm(y.res~x.res)))
+abline(0, 1, lty= 2) # create a line with a slope of 1 
+## creates a correct scatter plot when spurious regression is prevalent
+```
+FWL is very close to the correct line

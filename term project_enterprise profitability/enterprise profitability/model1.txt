@@ -1,0 +1,11 @@
+model
+{
+    for (i in 1:n) {
+        dat[i, 1] ~ dnorm(mu[i], tau)
+        mu[i] <- b[1] + b[2] * dat[i, 2] + b[3] * dat[i, 3]
+    }
+    b[1] ~ dnorm(0.00000E+00, 0.01)
+    b[2] ~ dnorm(0.00000E+00, 0.01)
+    b[3] ~ dnorm(0.00000E+00, 0.01)
+    tau ~ dgamma(1.00000E-04, 1.00000E-04)
+}

@@ -1,0 +1,58 @@
+\documentclass{article}
+% \usepackage{amsfonts}
+    \usepackage{amsmath}
+    \usepackage{amssymb}
+
+    \usepackage[splitrule]{footmisc}
+    \interfootnotelinepenalty=10000 %% Completely prevent breaking of footnotes
+    
+    % \usepackage{mathpazo}
+    % \usepackage{hyperref\}
+    % \usepackage{subfigure}
+    % \usepackage{tikz}
+\usepackage[authoryear,round,longnamesfirst]{natbib}
+
+ \usepackage{multirow}
+    \usepackage{graphicx}
+
+
+
+ \usepackage{tikz}
+ \usepackage{listings}
+ \usepackage{nth}  % proper superscripts with \nth{1}, \nth2 , etc
+ % Table formatting
+    \usepackage{tabularx}
+    \usepackage{ltablex}
+
+
+\begin{document}
+
+fourth unit: 
+
+$E(\epsilon |X )= \sigma^2 $
+
+
+$P$ is also a $n \times n $ matrix
+
+feasible GLS where we estimate the $P$ and the $\Psi$
+
+1) Assignment
+applied articles where th problem has been addressed empirically. plus solutions based on theoretical work 
+
+2) no STATA comments. theory: contextual issues. which assumptions is strongest. conceptual understanding. 
+
+ 
+ $C_{1}=(1+r)^{-\sigma} \beta^{-\sigma} [(1+r)(Y_{1}-C_{1})+Y_{2}] $
+
+
+$C_{1} = {\frac{1}{1+(1+r)^{\sigma -1} \beta ^\sigma}} [Y_{1}+ \frac{Y_{2}}{1+r}]$
+
+
+$\mathbb{E}(x) = \alpha_{0}+\alpha_{1} x^{*}+\alpha_{2}z $
+and 
+$\mathbb{E}(y) = \beta_{0}+\beta_{1} x+f(c) $
+
+
+where $ x^{*} is some latent part of $x$ and $c$ is still unobserved
+
+\end{document}

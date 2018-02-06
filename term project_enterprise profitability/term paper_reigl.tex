@@ -1,0 +1,589 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Journal Article
+% LaTeX Template
+% Version 1.3 (9/9/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Frits Wenneker (http://www.howtotex.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[twoside]{article}
+
+% consonants
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{lipsum} % Package to generate dummy text throughout this template
+
+\usepackage[sc]{mathpazo} % Use the Palatino font
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\linespread{1.05} % Line spacing - Palatino needs more space between lines
+\usepackage{microtype} % Slightly tweak font spacing for aesthetics
+
+\usepackage[hmarginratio=1:1,top=32mm,columnsep=20pt]{geometry} % Document margins
+\usepackage{multicol} % Used for the two-column layout of the document
+\usepackage[hang, small,labelfont=bf,up,textfont=it,up]{caption} % Custom captions under/above floats in tables or figures
+\usepackage{booktabs} % Horizontal rules in tables
+\usepackage{float} % Required for tables and figures in the multi-column environment - they need to be placed in specific locations with the [H] (e.g. \begin{table}[H])
+\usepackage{hyperref} % For hyperlinks in the PDF
+\usepackage{wrapfig}
+\usepackage{caption}
+
+\usepackage{lettrine} % The lettrine is the first enlarged letter at the beginning of the text
+\usepackage{paralist} % Used for the compactitem environment which makes bullet points with less space between them
+
+\usepackage{verbatimbox} % Used for adding additional vertical space to mathematical tabular sections
+
+\usepackage{adjustbox}
+\usepackage{graphicx}
+
+\usepackage{nth}
+
+\usepackage[natbib = true, style=authoryear, url = false, doi=false,isbn=false,  maxbibnames=9,maxcitenames=1,uniquelist=false, backend=biber]{biblatex}
+\addbibresource{Remote.bib}
+%\addbibresource{Rpackage.bib}
+
+% \usepackage[natbib = true, style=authoryear, url = true]{biblatex} % distribution version that includes url to the paper
+% For removing the "in:" after the author
+\renewbibmacro{in:}{}
+\renewbibmacro{in:}{%
+  \ifentrytype{article}{}{\printtext{\bibstring{in}\intitlepunct}}}
+
+\usepackage{abstract} % Allows abstract customization
+\renewcommand{\abstractnamefont}{\normalfont\bfseries} % Set the "Abstract" text to bold
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape} % Set the abstract itself to small italic text
+
+%%%%%%%%
+\newcommand*{\captionsource}[2]{%
+  \caption[{#1}]{%
+    #1%
+    \\\hspace{\linewidth}%
+    \textbf{Source:} #2%
+  }%
+}
+ 
+%%%
+
+
+% own packages
+\usepackage{tikz}
+\usepackage{standalone}
+ \usepackage{listings}
+ \usepackage{nth}  % proper superscripts with \nth{1}, \nth2 , etc
+ % Table formatting
+    \usepackage{tabularx}
+    \usepackage{ltablex}
+
+   \usepackage[
+singlelinecheck=false % <-- important
+]{caption} 
+
+ % \usepackage{amsfonts}
+    \usepackage{amsmath}
+    \usepackage{amssymb}
+
+\usepackage{enumitem, color, amssymb}
+
+% footnote without number macro
+\makeatletter
+\def\blfootnote{\xdef\@thefnmark{}\@footnotetext}
+\makeatother
+
+
+\usepackage{titlesec} % Allows customization of titles
+\renewcommand\thesection{\Roman{section}} % Roman numerals for the sections
+\renewcommand\thesubsection{\Roman{subsection}} % Roman numerals for subsections
+\titleformat{\section}[block]{\large\scshape\centering}{\thesection.}{1em}{} % Change the look of the section titles
+\titleformat{\subsection}[block]{\large}{\thesubsection.}{1em}{} % Change the look of the section titles
+
+\usepackage{fancyhdr} % Headers and footers
+\pagestyle{fancy} % All pages have headers and footers
+\fancyhead{} % Blank out the default header
+\fancyfoot{} % Blank out the default footer
+\fancyhead[C]{TES9130 - Econometrics $\bullet$ Term paper $\bullet$ } % Custom header text
+\fancyfoot[RO,LE]{\thepage} % Custom footer text
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\title{\vspace{-15mm}\fontsize{18pt}{12pt}\selectfont\textbf{MARKUPS AND THEIR IMPLICIATONS FOR MACROECONOMIC DYNAMICS}} % Article title
+
+\author{
+\large
+\textsc{Nicolas Reigl} \\ %\thanks{A thank you or further information}\\[2mm] % Your name
+\normalsize Tallinn School of Economics and Business Administration 
+\normalsize \\ Tallinn University of Technology
+\normalsize \\ Akadeemia tee 3, Tallinn, Estonia \\ % Your institution
+\normalsize \href{mailto:nicolas.reigl@gmail.com}{nicolas.reigl@gmail.com} % Your email address
+\vspace{-5mm}
+}
+\date{}
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Insert title
+
+\thispagestyle{fancy} % All pages have headers and footers
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT
+%----------------------------------------------------------------------------------------
+
+\begin{abstract}
+
+\noindent This paper investigates the behaviour of the Estonian markup over the business cycle. The analysis shows that the gross operating surplus and the profit margin indicator approximately move in pro-cyclical patterns with output. Furthermore, the profit margin indicator as proxy of the markup exhibits non-stationary movements over the sample period 1995Q1 to 2014Q2. The analysis of the results from a structural vector autoregressive model indicate that a positive unemployment gap shock is prominent in accounting for the upward trend in the markup on short horizons. Finally, positive profit margin indicator shocks prompt significant positive responses of the Estonian core inflation rate.     % Dummy abstract text
+
+\end{abstract}
+
+%----------------------------------------------------------------------------------------
+%	ARTICLE CONTENTS
+%----------------------------------------------------------------------------------------
+
+\begin{multicols}{2} % Two-column layout throughout the main article text
+
+\section{Introduction}
+
+\lettrine[nindent=0em,lines=3]{T}he behaviour of markups\footnotemark over the business cycle and their impact on prices has been in the focus of researchers for a long time. Production costs, competivness and markups reflect cyclical conditions of a country's economy. Entrepreneurs react to changes in the economic activites, prices charged by competitors, unit labour costs and other factors. They are determinants how shocks to the costs are translated into how firm's set prices. Therefore, understanding the dynamics of markups is crucial to the understanding of dynamics of inflation \citep{Macallan2008How}.
+
+Markups can be also interpreted as the difference between the actual and the efficient level of output. One way of measuring the markup is over the production function where the markup is the inverse of the labour share of income. Therefore, a widening markup points to shifts in the distribution of income from labour towards capital \citep{Khan2013Markups}.
+
+However, as \citeauthor{Blanchard2008State} noted: \textit{How markups move, in response to what, and why, is however nearly terra incognita for macro.\dots [W]e are a long way from having either a clear picture or convincing theories, and this is clearly an area where research is urgently needed.} (p. 18). 
+
+
+
+% footnote section
+\blfootnote{\textbf{Disclaimer: }The views expressed are those of the author and do not necessarily represent the official views of Eesti Pank or the Eurosystem. }
+\blfootnote{I would like to thank Dmitry Kulikov, Lenno Uusküla and Jaanika Meriküll and the participants of a research meeting at Eesti Pank  for helpful comments. Any errors are my own. }
+\footnotetext{In imperfect competitive markets firm's set prices as a mark-up over their marginal costs}
+
+
+
+The economic theory on the cyclical behaviour of markups is rather ambiguous.  No single theory provides a solid prediction on how markups move over the business cycle \citep{Klein2011South}. That is for two main reasons: First, the behaviour of the markup varies with movements in demand relative to supply capacity. I will refer to this as ``excess demand''. Therefore, the behaviour of the markup will depend how quickly wages and other costs adjust relative to the speed of price adjustments for any given excess demand. Consider following intuitive example: If prices adjust quickly but wages are sticky, the markup will increase when a positive demand shocks hits the economy. The firm will supply extra output by employing more labour. As wages are sticky, the labour costs transmit only slowly into higher marginal costs whereas prices adapt quickly; prices rise faster than costs, increasing the markup.
+
+The second reasons is that businesses strive for a ``desired'' markup when they set prices. The ``desired'' markup will depend on what firms think will happen to excess demand. Given a current markup, changes in excess demand will affect future profits over time. Various theories of how firms form their expectations and set their current markup exist \citep{Macallan2008How}. 
+
+\citet{Phelps1970Optimal} assumed that firms lower their current prices to expand their costumer base when they anticipate higher sales in the future; then markups would be pro-cyclical. 
+
+Later theoretical models offered explanations why markups should be counter-cyclical. 
+
+During economic expansions firms are less able to collude as their incentive to reduce prices and increase their market share is higher \citep{Rotemberg1986SupergameTheoretic}. 
+
+Also firms try to deter the entry of other firms to the market during economic booms by lowering the markups \citep{Stiglitz1984Price}
+
+Various authors also argumented that markups should be counter-cyclical due to declined elasticity of the aggregate demand and therefore increasing pricing power during economic downturns \citep{Bils1987Cyclical,Okun1981Prices,Klemperer1987Markets}. 
+
+
+Corporate finance theory suggests that markups are counter-cyclical because during recession, when firms have a low cash flows and a greater difficulty in raising external funds, tend to raise the markups to meet their financing needs \citep{Klemperer1995Competition,Chevalier1996CapitalMarket}. 
+
+There is large empirical evidence concerning the cyclical behaviour of the markup. However,  the evidence is not robust. Results seem to depend on the estimation techniques (the design of the production function in full structural models and the assumptions used to identify the marginal cost of production). 
+
+For the UK \citet{Haskel1995Price} and \citet{Macallan2008How}  have found that markups move in pro-cyclical patterns whereas for the US  markups moved in counter-cyclical patterns \citep{Bils1987Cyclical,Martins1999Levels,Rotemberg1991Markups}. 
+
+Beyond understanding the cylicality of markups researchers have tried to understand also the link between changes in the markups and inflation. Here again, the literature is not conclusive \citep{Klein2011South}. 
+
+\citet{Neiss2001Markup} found a positive correlation between the markups and inflation across OECD countries. He argues that higher markups raise the monetary authorities' incentive to increase output, leading to higher equilibrium rates of inflation. 
+
+A positive link between markups and inflation was also found in \citet{Chirinko2000Market} and \cite{Bowdler2004Testing}. 
+
+In some New Keynesian models a positive link between markups and inflation was found \citep{Ball2005Monetary,Steinsson2003Optimal}. In those models the change in the desired markup tends to transmit to prices via a cost-push shock. 
+
+When looking on the impact of an inflation shock to markups negative correlation was found \citep{Benabou1992Inflation,Banerjee2005Inflation}. \citet{Benabou1992Inflation} stated that higher inflation leads to more price dispersion, which increases competition in costumers markets that leads to decreasing markups. 
+
+
+This paper looks at the cyclical behaviour of the markups in Estonia at the aggregate of the private sector and assesses the markups impact on inflation dynamics.  
+
+This paper is organized as follows. Section \ref{Measuring}
+reviews briefly the existing metrics of the markup and analysis the cyclicality of the markup. Section \ref{data}  gives an overview of the data used in the econometric model. Section \ref{Econometric framework}  discusses the econometric framework.  Section \ref{Results} presents the empirical results. The final section concludes. 
+
+%------------------------------------------------
+
+\section{Measuring the markup and its cyclical pattern}
+\label{Measuring}
+
+The markup is the difference between the price that a business charges and its marginal cost. But measuring the markup is tricky. The markup can not be observed directly. Instead it must be estimated. The markup can thought to be proportional to the inverse of labour income share 
+
+\begin{equation}
+ \mu = \frac{P}{MC} = \frac{P \times MPL}{W} = \frac{P \times \frac{Y}{L} \eta _{Y,L}}{W} = \frac{\eta _{Y,L}}{S} 
+\end{equation}
+where $\mu$ is the markup, $P$ is the price, $MC$ is the marginal cost and $S$ denotes the labour share.  $\eta _{Y,L}$ represents elasticity of output with respect to labour input \citep{Klein2011South}. 
+
+
+
+Any estimate will depend on how firms combine inputs (such as capital and labour) to produce output. A simple form, where overhead labour inputs are considered in the model was proposed by \cite{Rotemberg1991Markups}. Assuming the production function takes the Cobb-Douglas form of
+
+
+
+\begin{equation}
+ Y_{t}=A_{t}^\alpha(L_{t}-\bar{L_{t}})^\alpha  K_{t}^{1-\alpha}
+\end{equation}
+where $Y_{t}$, $K_{t}$, $L_{t}$,  and $A_{t}$ are output, capital input, labour input and labour-augmenting technology, respectively. $\bar{L_{t}}$ denotes the overhead labour. Then the markup is modified to
+
+\begin{equation}
+ \frac{P_{t}}{MC_{t}} = \alpha \frac{1_{t}}{S_{t}}(\frac{L_{t}}{L_{t}-\bar{L_{t}}})
+\end{equation}
+$P_{t}$ denotes the firms' optimal price which can be expressed as a markup over marginal costs $MC_{t}$. The labour share of income, $S_{t}$ equals $\frac{W_{t}L_{t}}{P_{t}Y_{t}}$ where $W_{t}$ denotes the wages. 
+
+Besides estimating the markup indirectly with a production function other measures of markups are available.
+
+\begin{figure}[H]
+\centering
+\resizebox{10cm}{!}{\input{Comp_B2G_incSK_out1}}
+\vspace*{-10mm}
+\caption{Baltic and Austrian Corporate Profit Margins}\label{fig:Corporate Profit Margins}
+\vspace*{-4mm} %get rid of the nas
+\caption*{Source: EUROSTAT - namq\_10\_gdp}
+\end{figure}
+
+
+First, the \textit{profit margin} is understood to be the ratio of profits (or ``gross operating surplus'') to gross output . It can be calculated from the national accounts: 
+
+
+\addvbuffer[12pt 8pt]{
+\begin{tabular} { l  }
+    Production (P1) \\
+      - intermediate consumption (P2) \\
+      - compensation of employees (D1) \\
+      - net taxes on production (D29-D39)\\
+      \hline
+      Gross operating surplus (B2G)
+\end{tabular}
+}
+
+
+The gross operating surplus margin is defined as the ration of gross operating surplus to value added. Value added (B1G) can be calculated when deducting intermediate consumption (P2) from production (P1). 
+
+Another measurement is the \textit{profit margin indicator}. One way to calculate the profit margin indicator\footnotemark is: 
+\begin{equation}
+\text{Profit margin indicator} = \frac{\text{YFD}}{\text{NULC}}
+\end{equation}
+
+The GDP deflator at basic prices (YFD) is $YFD = YED \times (1-TINYEN)$ where $TINYEN$ is the ratio of indirect taxes net of subsidies to nominal GDP \citep{Kramer2010Methodological}. $NULC$ denotes the nominal unit labour costs. 
+
+\footnotetext{Note that literature sources are not consistent when it comes to the terminology and calculation methodology. The working group on forecasting methodological note has a different term and different calculation method for the profit margin indicator. However, another European Central Bank (ECB) article uses the term ``profit mark-up indicator'' for a similar measurement \citep{Ecb2004Measuring} }
+
+
+The markup and the profit margin metrics are used in the same context but they are not the same. It can be shown that when the profit margin increases when excess demand increases the markup will increase, in general, too \citep{Macallan2008How}. 
+
+As it is more straightforward to calculate the profit margin indicators, I use the profit margin indicator as proxy of the ``true'' markup. 
+
+
+In the first step I will analyse the gross operating surplus margin. Figure \ref{fig:Corporate Profit Margins} shows the gross operating surplus margin of Estonia (EE), Latvia (LV) and Lithuania (LT). For comparison I also plot the gross operating margin for Austria (AT).
+
+Also plotted in the figure is the gross profit share for Austria and Estonia. The gross profit share (B2G\_B3G) is equal to the gross operating surplus but also includes mixed income\footnotemark. 
+
+Whereas the gross operating surplus margin has to be calculated manually, the gross profit share can be extracted from EUROSTAT directly. However, as fewer datapoints for the gross profit share are available I use the gross operating surplus margin for the further analysis. 
+
+
+The markup proxies remain undeflated for the first analysis. It can be seen that the gross operating surplus in levels tends to move in pro-cyclically. For Estonia the profit indicators increased up until 2006. Even before the crises they seem to decrease gradually which might be related to the strong increase in real wages pre-crises. Another reason might be that the Estonian business cycle turned in the \nth{2} quarter of 2007, much before the start of the global financial crises in the \nth{3} quarter of 2008. In late 2009 excess demand seems to pick up again and an increase in the markup proxies is visible for all countries. 
+
+Figure \ref{fig:Corporate Profit Margins} also suggests that the difference between the manually calculated gross operating surplus margin and the gross profit share is more pronounced than expected. 
+
+
+\begin{figure}[H]
+\centering
+\resizebox{8cm}{!}{\input{p1}}
+\vspace*{-10mm}
+\caption{Margins and Real GDP Growth in Estonia}\label{fig:Margins and Real GDP Growth in Estonia}
+\vspace*{-4mm} %get rid of the nas
+\caption*{Source: EUROSTAT (namq\_10\_gdp)}
+\end{figure}
+
+
+
+To complete the analysis, it is worth comparing the movement of the profit share of Estonia with that of foreign counterparts. Clearly Estonia has the lowest profit margin among the Baltic states but larger profitability proxies than a Central European country, namely Austria.
+
+ This seems in line with theoretical arguments. The product markets' competitiveness is dependent, among other factors, on the degree of market concentration. The degree of market concentration is furthermore dependent on the extent of liberalisation of economic policies and the enforcement of competition policy.  \citet{Klein2011South} found that the lack of competition and in particular a high concentration across sectors is associated with high markups in South Africa. In that respect the markup in a well developed country in Central Europe should be smaller than in Estonia. Following this argument one might assume that Estonia has better economic policies, more competitive markets and a more advanced economy than Latvia and Lithuania. 
+
+
+Figure \ref{fig:Margins and Real GDP Growth in Estonia} shows the change real GDP growth and its composition. The figure shows that, from an income angle, the rise in the gross operating surplus was contributing heavily to GDP growth in pre-crises years. At the same time compensation of employees also rose steadily in the pre-crises years and seems volatile. Starting in the second quarter of 2007 the change in the gross operating surplus experienced an unprecedented decrease. Interestingly, the gross operating surplus margin growth turned negative in 2012 again but the compensation of employees growth increased, which resembles pre-crises dynamics. 
+
+
+\begin{figure}[H]
+% \centering
+\resizebox{8cm}{!}{\input{grossOperatingSurplus_vs_profitMarginIndicator}}
+\vspace*{-10mm}
+\caption{Gross Operating Surplus vs. Profit Margin Indicator}\label{fig:Gross Operating Surplus vs. Profit Margin Indicator}
+\vspace*{-4mm} %get rid of the nas
+\caption*{Source: EUROSTAT  (namq\_10\_gdp, namq\_10\_lp\_ulc)}
+\end{figure}
+
+
+It can be seen from Figure \ref{fig:Gross Operating Surplus vs. Profit Margin Indicator} that real GDP and the gross operating surplus exhibit a strong co-movement behaviour. The profit margin indicators' behaviour can be split in pre-crises and post-crises patterns. Pre-crises profit margin indicator shows an erratic rather counter-cyclical behaviour whereas during and in the aftermath of the financial crises it shows a strong positive correlation with the real gross value added. % With respect to the structural vectorautoregressive analysis the strong co-movements of the gross operating surplus might pose an identification problem. 
+
+\blfootnote{A comparison with other middle income countries such as Spain would be desirable. Unfortunately not all inputs for calculating the gross operating surplus are available. }
+
+\footnotetext{Mixed income is the remuneration for the work carried out by the owner (or members of his family) of an unincorporated enterprise. This is referred to as ``mixed income'' as it cannot be distinguished from the entrepreneurial profit of the owner \citep[p 177]{franccois2007understanding}.}
+
+%------------------------------------------------
+\section{Data}
+\label{data}
+The empirical literature is very limited for structural vector autoregressive (SVAR) models that incorporate measures of the markup. \citet{Kim2010Identifying} uses a five-variable model to estimate the effects of a permanent markup shock. The model includes the markup ratio 
+($\Delta log (P_{t}/MC_{t})$), the growth of the real wage ($\Delta log (W_{t}/P_{t})$), the growth of per capita output ($\Delta log Y_{t}$), inflation ($\Delta log P_{t}$) and the federal funds rate ($FFR_{t}$).  In the second available paper by \citet{Khan2013Markups} a six variable SVAR includes the oil price growth ($\Delta p_{t}^o$), the mark up ratio growth ($\Delta log (P_{t}/MC_{t})$), the growth of real wages ($\Delta log (W_{t}/P_{t})$), the growth of real capita output ($\Delta log Y_{t}$), the log of the product of the overhead labor factor  ($ log U_{t}$), the inflation ($\Delta logP_{t}$) and the bank rate ($r$). 
+
+Given the novelty of this research for Estonia I rely on a simpler SVAR model with proven identifying restrictions in which I include the profit margin indicator. A five-variable VAR model is constructed to estimate the shocks to the nominal exchange rate (denoted as ``\textit{neer}''), the short-term interest rate (denoted as ``\textit{eemmrate}''), the profit margin indicator (denoted as ``\textit{profitmrg}'') and the core inflation rate (denoted as ``\textit{core}''). The unemplyoment gap (denoted as ``\textit{eeugap}'') is defined as the  difference between the nonaccelerating inflation rate of unemployment (NAIRU) and the unemployment rate. For the NAIRU I use the long-term unemployment  data for Estonia. 
+
+For the nominal exchange rate (NEER) I use the trade-weighted currency index of the EU28 countries. For the short-term interest rate I use the 3-month averages for the euro area countries (EURIBOR) and for the period before Estonia entered the Euro Area system the 3-month rates for Estonia.  The profit margin indicator enters the model as proxy for the markup. The core inflation is defined as Estonias harmonized consumer price index excluding energy, food, alcohol  and tobacco. 
+
+Except for the core inflation rate all data was extracted from Eurostat in quarterly levels. The core inflation rate was downloaded in monthly frequency and later aggregated to quarterly values. The data was seasonally and outlier adjusted. Unfortunately the Eurostat database does not contain complete data for calculating the unemployment gap and the core inflation rate for periods earlier then 1997. Those numbers were obtained from Eesti Pank. In total, the matrix contains 80 observations,  starting in the first quarter of 1995 and ending in the fourth quarter of 2014.  
+
+Figure \ref{fig:time series plots} shows the unemployment gap (\textit{eeugap}) in levels, the log levels of the nominal exchange rate (\textit{lneer}), the short term interest rate in levels (\textit{eemmrate}) and the core inflation in log levels (\textit{lcore}). Whereas the nominal exchange rate and the core inflation series seem to contain a constant, the unemployment gap series and the profit margin indicator resemble non-stationary processes without a constant or trend. For the short-term interest rate a structural break after 1999 can not be ruled out. 
+
+
+From a theoretical perspective, the markup is thought to exhibit stationary movements \citep{Khan2013Markups}.
+
+ Empirical evidence has however shown that markups in Europe but also the US do not have the tendency toward a specific mean \citep{Gali2001European,Kim2010Identifying}. 
+ % latex table generated in R 3.2.1 by xtable 1.8-0 package
+% Wed Jan 13 15:56:08 2016
+% latex table generated in R 3.2.1 by xtable 1.8-0 package
+% Wed Jan 13 16:24:38 2016
+\begin{table}[H]
+\centering
+\begin{tabular}{lcrrrrrr}
+  \hline
+                    &                     &      &            &        & Critical values & \\
+Variable            & Deterministic terms & Lags & Test value & 1pct   & 5pct            & 10pct \\
+  \hline
+\textbf{ADF Test}             &                     &      &            &        &                 & \\
+lprofitmrg          & constant            & 4    & -1.876     & -3.510 & -2.890          & -2.580 \\
+$\Delta$ lprofitmrg &                     & 3    & -3.625     & -2.600 & -1.950          & -1.610 \\
+
+
+\textbf{KPSS Test}           &                     &      &            &        &                 & \\
+lprofitmrg          & constant, trend     & 4    & 0.259      & 0.216  & 0.146           & 0.119 \\
+lprofitmrg          & constant            & 4    & 0.335      & 0.739  & 0.463           & 0.347 \\
+$\Delta$ lprofitmrg & constant            & 3    & 0.257      & 0.739  & 0.463           & 0.347 \\
+   \hline
+\end{tabular}
+\caption{Unit root tests on profit margin indicator} 
+\vspace*{-3mm} %get rid of the nas
+% \caption*{Note: In the ADF test, the optimal lag length was chosen using the Akaike information criterion (AIC) and the Bayesian information criterion (BIC. For the KPSS the same lag structure is applied.)}
+\label{table: unit root test}
+\end{table}
+
+I test for the presence of unit roots and stationarity of the profit margin indicator by applying the augmented Dickey-Fuller (ADF) and the Kwiatkowski-Phillips-Schmidt-Shin (KPSS) test. The null hypothesis of the ADF test is that the log of the profit margin indicator follows a unit root process while the KPSS test assumes in the $H_{0}$ that the log of the profit margin indicator is stationary. 
+
+Table \ref{table: unit root test} reports the results of the unit root test. 
+
+
+
+\blfootnote{Note: In the ADF test, the optimal lag length is chosen using the Akaike information criterion (AIC) and the Bayesian information criterion (BIC). For the KPSS test the same lag structure is applied. $\Delta$ denotes the year on year difference (yoy). }
+
+
+\begin{figure}[H]
+% \centering
+\resizebox{8cm}{!}{\input{full_matrix}}
+\vspace*{-10mm}
+\caption{Estonian data set: Time series plots}\label{fig:time series plots}
+\vspace*{-4mm} %get rid of the nas
+\caption*{Source: EUROSTAT, Eesti Pank}
+%\vspace*{-4mm} %get rid of the nas
+%\caption*{eeugap denotes the level series of the Estonian unemployment gap. The nominal exchange rate is depicted in log-levels. }
+\end{figure}
+
+
+\newpage
+The ADF test of log level series of the profit margin indicator strongly points to the fact that the profit margin indicator is non-stationary at any significant level. Including a deterministic trend does not change the results for ADF test significantly. 
+
+This is in slight contrast to the output of the KPSS test. Whereas the log level values have already stationarity properties when only a constant is included, the test indicates non-stationary properties when a constant and a deterministic trend are included. 
+
+In the next step I transform quarterly values to yearly growth rates to add economic meaning and remove short-term disturbances. 
+
+
+
+The differenced log series clearly rejects the presence of a unit root at all significance levels. Furthermore, the KPSS fails to reject the $H_{0}$ even at the one percent significant level when 3 lags and a constant term are considered in the equation. Summed up it can be stated that both econometric tests strongly point to the evidence for the non-stationarity of the markup proxy in log levels and stationarity in first log differences. 
+
+The remaining time series exhibit similar properties\footnotemark. They are (weakly) non-stationary in level or log levels but after the first transformation (year on year difference) become stationary.  
+\footnotetext{The unit root test for the remaining variables is not reported in this paper but can be reproduced with the enclosed econometric code.}
+
+
+\section{Econometric framework}
+\label{Econometric framework}
+
+The vector of endogenous variables  consists of the unemployment gap (eeugap), the yoy difference of the nominal exchange rate ($\Delta log $ neer), the short term interest rate (eemmrate), the yoy difference of the profit margin indicator ($\Delta log$ profitmrg) and the yoy difference of the core inflation ($\Delta log$ core). 
+
+The structural vector autoregressive model takes a general form of 
+
+\begin{multline}
+Ay_{t}= A^*_{1}y_{t-1} + \dots + A^*_{p}y_{t-p}+ B\varepsilon_{t} 
+\end{multline}
+
+It is assumed that the errors $\varepsilon_{t}$ are white noise and coefficient matrices $A^*_{i}$ for $i = 1,\dots p$ are structural coefficients that differ in general from their reduced form counterparts. I estimate a $B$ model. The $A$ matrix is set to  an identity matrix $I_{K}$. 
+
+\begin{align}\label{identifier matrix}
+B=
+  \begin{pmatrix}
+   B_{11} & 0      & 0      & 0      & 0\\
+   B_{21} & B_{22} & 0      & 0      & 0      & \\
+   B_{31} & B_{32} & B_{33} & 0      & 0      & \\
+   B_{41} & B_{42} & B_{43} & B_{44} & 0      & \\
+   B_{51} & B_{52} & B_{53} & B_{54} & B_{55} & \\
+  \end{pmatrix}
+\end{align}
+
+
+Choosing the lower triangle form provides sufficiently many restrictions to have the model just identified.The first element of $\varepsilon_{t}$ is a shock to the unemployment gap ($\varepsilon^{eeugap}_{t}$). The second element of $\varepsilon_{t}$ is a shock to the nominal exchange rate ($\varepsilon^{dlneer}_{t}$) and the last element is an interest rate shock ($\varepsilon^{dlcore}_{t}$). 
+
+The zeros in the first row of equation \eqref{identifier matrix} show the restriction that only the unemployment gap shock affects the level of the unemployment gap. 
+
+Under this model's framework I assume that the Estonian unemployment gap is stationary in log levels. However, it should be noted that even though the unemployment gap has usually been modelled as stationary variable, the assumption might be premature given my unit root test results and new empirical evidence from \citep{Gali2015Hysteresis}. 
+
+Similar, it is controversial whether the inflation rate and the short-term interest rate follow a stationary process \citep{Altig2011FirmSpecific,Edge2003Responses}. Given volatile inflation dynamics in Estonia \citep{Masso2005Inflation}, I model the core inflation rate in first differences. The short term interest rate has shown a more volatile behaviour in the past but the present lock in at the zero lower bound might indicate a stronger stationary pattern on the mid-term horizon.     
+
+Interpreting the long term impulse response functions should be taken with caution as incorporating the short term interest rate and the unemployment gap in level in the system of equations might lead to impulse response functions that are not consistent estimators of the true impulse response functions in the long run \citep{Phillips1998Impulse}. 
+
+
+%------------------------------------------------
+\section{Results}
+\label{Results}
+
+The impulses response functions are shown in Figures \ref{fig:IRS_eeugap}-\ref{fig:IRS_dlcore}. The impulse respond to an expansionary one standard deviation shock. The solid lines in the figures are point estimates whereas the red dotted lines denote the 95\% confidence intervals. The confidence intervals are computed by bootstrap simulations with 3000 runs.   
+
+The horizontal axis show 20 quarters after a particular shock. The vertical axis show the percentage change as response to the shock. The number of lags is set to two. Higher lag numbers have been tested but the responses to shocks becomes erratic and difficult to interpret.
+
+
+Figure \ref{fig:IRS_eeugap} shows the impulse response to a positive unemployment gap shock. The nominal exchange rate decreases in the short run and rebounds to a zero \% change after about 18 quarters. An increase in the unemployment gap also leads to a small decrease in the short-term interest rate. Both responses can be explained by theoretical models. 
+
+The response of the profit margin indicator is of major importance for our analysis. The profit margin rises immediately after the shock significantly and stays at about 0.7\% for four quarters. Right after it levels off and enters a slightly negative territory. The long-run decrease might be related to the long-run behaviour of the unemployment gap shock. The response of the profit margin indicator is somewhat surprising. When we associate the output gap shock to a negative shock in the economy, the profit margin indicators response reacts countercyclical. The literature has provided a number of explanations for such a response but at the least the dynamics of the profit margin indicator would predict otherwise. One possible explanation for the increase in the profit margin indicator is country specific. The flexible labour market in Estonia allows for wages to adept faster then prices. As a results the sticky prices would remain unchanged when the wage have already moved to a lower equilibrium level,leading to a higher profits to the entrepreneur\ owner of capital. The exact mechanism, namely if the unemployment gap is moving due to structural or cyclical changes,  is difficult to pin down. Our put differently,  it is not clear if a ceteris paribus increase in the NAIRU, a ceteris paribus decrease in the unemployment rate or and negatively related movement of both leads to the changes in the unemployment gap. 
+
+
+The core inflation rate moves according to theoretical predictions and decreases slightly. The actual unemployment gap shock gradually rebounds after 10 quarters and settles at slightly negative level.
+
+ Figure \ref{fig:IRS_dlneer} shows the impulse response to a nominal exchange rate shock. Per construction the nominal exchange rate shock has no immediate effect on the unemployment gap. The shock leads after a short increase to a slightly significant decrease of the short-term interest rate which rebounds to the end of the IRF panel. 
+
+ The profit margin indicator responds immediately, moving from a slightly negative growth to a slight increase between the \nth{5} and \nth{13} quarter. In the current framework there is not distinction between the profit margin indicator of the traded and the non-traded sector. The response to the nominal exchange rate impulse might depend on the sectoral decomposition and the change of the sectoral decomposition over the years. The observed response can be reconciled with a model of a small open economy. The short term increase in the nominal exchange rate puts the firms under international competitive pressure which results in lower profit margins. When the nominal exchange rate decreases, the consumption might change from foreign goods to domestic goods which should increase the profit margin of the firms. With respect to the open  economy structure of Estonia the results seem plausible. 
+
+\clearpage
+
+
+\begin{figure}[H]
+% \centering
+\resizebox{12 cm}{!}{\input{IRS_eeugap}}
+\vspace*{-10mm}
+\caption{Impulse response to unemployment gap shock in VAR}\label{fig:IRS_eeugap}
+% \vspace*{-4mm} %get rid of the nas
+% \caption*{Source: EUROSTAT  (namq\_10\_gdp, namq\_10\_lp\_ulc)}
+\end{figure}
+
+\begin{figure}[H]
+% \centering
+\resizebox{12 cm}{!}{\input{IRS_dlneer}}
+\vspace*{-10mm}
+\caption{Impulse response to unemployment gap shock in VAR}\label{fig:IRS_dlneer}
+% \vspace*{-4mm} %get rid of the nas
+% \caption*{Source: EUROSTAT  (namq\_10\_gdp, namq\_10\_lp\_ulc)}
+\end{figure}
+
+\begin{figure}[H]
+% \centering
+\resizebox{12 cm}{!}{\input{IRS_eemmrate}}
+\vspace*{-10mm}
+\caption{Impulse response to unemployment gap shock in VAR}\label{fig:IRS_eemmrate}
+% \vspace*{-4mm} %get rid of the nas
+% \caption*{Source: EUROSTAT  (namq\_10\_gdp, namq\_10\_lp\_ulc)}
+\end{figure}
+
+\begin{figure}[H]
+% \centering
+\resizebox{12 cm}{!}{\input{IRS_dlprofitmrg}}
+\vspace*{-10mm}
+\caption{Impulse response to unemployment gap shock in VAR}\label{fig:IRS_dlprofitmrg}
+% \vspace*{-4mm} %get rid of the nas
+% \caption*{Source: EUROSTAT  (namq\_10\_gdp, namq\_10\_lp\_ulc)}
+\end{figure}
+
+
+
+\begin{figure}[H]
+% \centering
+\resizebox{12 cm}{!}{\input{IRS_dlcore}}
+\vspace*{-10mm}
+\caption{Impulse response to unemployment gap shock in VAR}\label{fig:IRS_dlcore}
+% \vspace*{-4mm} %get rid of the nas
+% \caption*{Source: EUROSTAT  (namq\_10\_gdp, namq\_10\_lp\_ulc)}
+\end{figure}
+ 
+
+\newpage
+
+
+Again, the core inflation rate moves according to theoretical predictions in a statistically significant manner when we consider that the core inflation rate reacts with a certain time lag. An increase in the nominal exchange rate should reduce the effects of imported inflation and the rebound to the zero level of the nominal exchange rate is followed by a rebound from the negative area to the zero level of the core inflation rate. 
+
+
+Turing to the short-term interest rate (see Figure \ref{fig:IRS_eemmrate}) which should not have an impact on the structural component of the unemployment gap and in my model the nominal exchange rate (as Estonia has not had an independent monetary policy) it can be seen that a positive shock to the interest rate leads to an immediate response of the profit margin indicator. The profit margin indicator change then increases and becomes slightly signficant after 5 quarters.
+
+ The result is more difficult to explain as most theoretical models and empirical studies do not address the issue how changes in the money market rate should impact the profit margin indicator. In addition, although the money market rate is considered to be endogenous in my model, it is in fact exogenously determined in Frankfurt. 
+
+The response depicted in the last block of Figure \ref{fig:IRS_eemmrate} indicates that a tightening of monetary policy has immediate significant but only slight effect of the core inflation rate in the direction that we would expect. 
+
+
+Finally, turning to Figure \ref{fig:IRS_dlprofitmrg} it can be seen that when a profit margin shock hits the economy, the core inflation increases by about 0.5\%. The increase is statistically significant. The core inflation rate then returns to the zero growth path. This seems consistent with theoretical predictions and is also in line with the findings of \citet{Neiss2001Markup}. 
+
+%------------------------------------------------
+
+
+\section{Conclusions}
+\label{Conclusions}
+
+This paper provides a primer in the analysis of the Estonian markup and its behaviour over the business cycle. The empirical analysis of the observations of the profit margin indicator as a proxy of the ``true'' markup shows that it moves approximately pro-cyclical over the business cycle. 
+
+The econometric tests point to the evidence for the non-stationarity of the profit margin indicator. Those results are in line with empirical findings for OECD countries \citep{Neiss2001Markup} but contradictory to theoretical models. 
+
+In the next step I construct a SVAR model with standard identifying restrictions. The analysis shows that the movements of the unemployment gap are especially important for understanding the behaviour of the markup. However, the lack of detailed theoretical understanding what causes the unemployment gap to change over time leaves room for interpretation. One possible explanation is that during periods with a higher cyclical unemployment firms have more power to lower wages whereas at the same time keep prices up, resulting in an increase of the markup. This argument is partially supported by the results from Section \ref{Measuring} which show that the gross operating surplus is strongly related to the development of employee compensation. 
+
+Nominal exchange and short-term interest rate shocks cause only small and insignificant responses to the profit margin indicator. Nevertheless, further investigations into open and closed sector markup dynamics and their macroeconomic implications might provide important insights that enhance our understanding of the behaviour of markups. 
+
+Finally, profits margin indicator shocks influence the core inflation rate. This finding has important implications for inflation dynamics. It shows that rising markups contribute positively to the core inflation rate. Thus, further investigations into the possibility of using markups as variables in inflation forecasting models seem to be a fruitful research area.    
+
+  
+%----------------------------------------------------------------------------------------
+%	REFERENCE LIST
+%----------------------------------------------------------------------------------------
+\clearpage
+
+\renewcommand*{\bibfont}{\scriptsize}
+\printbibliography
+
+
+
+
+\clearpage
+
+
+
+
+% \begin{table}[H]
+% \centering
+% \begin{tabular}{rrrrr}
+%   \hline
+%             & Estimate & Std. Error & t value & Pr($>$$|$t$|$) \\
+%   \hline
+% (Intercept) & 0.012    & 0.007      & 1.740   & 0.086 \\
+% z.lag.1     & -0.078   & 0.041      & -1.876  & 0.065 \\
+% z.diff.lag1 & -0.110   & 0.119      & -0.923  & 0.359 \\
+% z.diff.lag2 & 0.286    & 0.118      & 2.416   & 0.018 \\
+% z.diff.lag3 & 0.203    & 0.121      & 1.676   & 0.098 \\
+% z.diff.lag4 & 0.033    & 0.117      & 0.282   & 0.779 \\
+%    \hline
+% \end{tabular}
+% \caption{Profit Margin Estonia} 
+% \label{PROFITMRG}
+% \end{table}
+%----------------------------------------------------------------------------------------
+
+\end{multicols}
+
+\end{document}

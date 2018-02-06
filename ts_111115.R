@@ -98,7 +98,7 @@ arima.sim(n = 63, list(ar = c(0.8897, -0.4858), ma = c(-0.2279, 0.2488)),
           rand.gen = function(n, ...) sqrt(0.1796) * rt(n, df = 5))
 
 
-# ADF test 
+# DF test 
 set.seed(4321)
 E=rnorm(340)
 ts1<-cumsum(E)
@@ -120,6 +120,9 @@ summary(lm(z.diff~0+z.lag.1 ))$coefficients[1,3]
 df=ur.df(ts1,type="none",lags=0)
 summary(df)
 ## the value for the t-statistic is the same
+## the same would apply to the ADF when we repeat the exercise with lags
+
+
 
 # Simple time series forecasts
 ## simulate an AR(2) process
@@ -132,8 +135,7 @@ pacf(ts2)
 # for h steps ahead forecast with confidence intervals
 plot(predict(ts2, h = 40))
 
-?arima.sim
-# now, simulate an ARMA (2,3)
+# now, simulate an ARMA (2,2)
 ts3 <-  arima.sim(list(order = c(2,0,2), ar = c(0.8, -0.6), ma= c(0.8, 0.6)), n = 200, innov = rnorm(200))
 ts.plot(ts3)
 acf(ts3)
@@ -141,3 +143,13 @@ pacf(ts3)
 
 # for h steps ahead forecast with confidence intervals
 plot(predict(ts3, h = 100))
+
+# simulate an ARIMA (2,2)
+ts4 <-  arima.sim(list(order = c(2,2,2), ar = c(0.8, -0.6), ma= c(0.8, -0.6)), n = 200, innov = rnorm(200))
+ts.plot(ts4)
+acf(ts4)
+pacf(ts4)
+
+# for h steps ahead forecast with confidence intervals
+plot(predict(ts4, h = 100))
+
